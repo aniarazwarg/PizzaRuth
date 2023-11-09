@@ -10,13 +10,11 @@ function Menu(){
                 <a style={{color: 'white', textDecorationLine:'none'}} href="/Criar">Criar</a>
             </Button>
            
-            <Button style={{backgroundColor: 'red', border:'none'}}>
-                <a style={{color: 'white', textDecorationLine:'none'}} href="/Usuario">Usuario</a>
-            </Button>
+            {/* <Button style={{backgroundColor: 'black', border:'none'}}>
+                <a style={{color: 'white', textDecorationLine:'none'}} href="/Usuario">Empresa</a>
+            </Button> */}
            
-            <Button style={{backgroundColor: 'red', border:'none'}}>
-                <a style={{color: 'white', textDecorationLine:'none'}} href="/Produtos">Produtos</a>
-            </Button>
+            
            
        </div>
     )

@@ -66,16 +66,20 @@ function teste() {
                             <Nav.Link style={{ color: "red" }} href="/">
                                 Início
                             </Nav.Link>
-                            <Nav.Link href="/Cardapio">Cardápio</Nav.Link>
+                            
                             <Nav.Link href="#link">Administrador</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+
+        
+
+
             <Container>
                 <Row>
                     <Col>
-                       <h1 onClick={teste}> TESTE</h1>
+                       {/* <h1 onClick={teste}> TESTE</h1> */}
                         <Form>
                             <Form.Group className="mb-3 mt-5" controlId="formBasicEmail">
                                 <Form.Label>Endereço de email</Form.Label>

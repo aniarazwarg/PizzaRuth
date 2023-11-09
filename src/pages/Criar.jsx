@@ -17,14 +17,51 @@ import { Form, FormLabel, InputGroup } from "react-bootstrap";
 function Criar() {
   return (
     <div>
-      <Navbar expand="lg" className="bg-body-primary">
+       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
+              justifyContent: "center",
+              height:50,
+              position: "fixed",
+              zIndex:1000,
+              backgroundColor:"white",
+              left: 0,
+          right: 0,
+          width: "100%"
+              }}>
         <Container>
-          <Image src={Logo} rounded />
-          <Menu />
+            <Row>
+                <Col md={4} style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft:100,
+              marginTop:30,
+              
+            }}>
+               
+                    <p >
+                       <a style={{color:"red"}} href="/"> Voltar para a Home</a>{""}
+                    </p>
+                    
+                </Col>
+                <Col md={6}><Image src={Logo} rounded style={{padding:10, width:700,}}/></Col>
+            </Row>
+            {/* <Row>
+                <Col md={12} style={{
+            height:5,
+          borderTop:1,
+          borderColor:"black",
+          backgroundColor:"black",
+          margin: 0,
+          }}> </Col>
+            </Row> */}
+            
+            
+       
+      
         </Container>
+        
       </Navbar>
       <div>
-        <Container>
+        <Container style={{padding:100}}>
           <Row>
             <Col xs={6}>
               <img
@@ -45,7 +82,7 @@ function Criar() {
                     margin: 60,
                   }}
                 >
-                  <Card.Title style={{ width: "35%" }}>
+                  <Card.Title style={{ width: "55%" }}>
                     Criar minha conta
                   </Card.Title>
                   <Card.Text>Boa, vamos começar!</Card.Text>

@@ -53,10 +53,19 @@ function Home() {
 
   return (
     <div>
-      <Navbar expand="lg" className="bg-body-primary">
+      <Navbar expand="lg" className="bg-body-primary" style={{
+                            height:60,
+              position: "fixed",
+              zIndex:1000,
+              backgroundColor:"white",
+              left: 0,
+          right: 0,
+          width: "100%"
+              }}>
+               
         <Container>
-          <Image src={Logo} rounded />
-          <Menu />
+          <Image style={{width:900, paddingLeft:300 }} src={Logo} rounded />
+          <Menu  style={{paddingRight:300}}/>
         </Container>
       </Navbar>
       <Container fluid style={{ width: "100%", height: 500 }}>
@@ -105,7 +114,7 @@ function Home() {
                 <Form onSubmit={handleSubmit}>
                   <InputGroup className="mb-3" style={{ marginTop: 30 }}>
                     <Form.Control
-                      placeholder="Informar CEP"
+                      placeholder="Informe seu CEP"
                       aria-label="Example text with button addon"
                       aria-describedby="basic-addon1"
                       value={cep}
