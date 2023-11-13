@@ -13,6 +13,8 @@ import Usuario from "./pages/Usuario";
 import CEPForm from "./pages/searchCep";
 import Produtos from "./pages/Produtos";
 import Cadastro from "./pages/Cadastro";
+import Administrador from "./pages/Administrador";
+import Post from "./pages/Post";
 
 function App() {
 
@@ -20,15 +22,18 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element ={<Home/>}/>
+          <Route path="/Home" element ={<Home/>}/>
           <Route path="/Entrar" element ={<Entrar/>}/>
           <Route path="/Criar" element ={<Criar/>}/>
           <Route path="/exemploMap" element={<ExemploMap/>}/>
-          <Route path="/Cardapio" element={<Cardapio/>}/>
+          <Route path="/" element={<Cardapio/>}/>
           <Route path="/Usuario" element={<Usuario/>}/>
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
           <Route path="/Cadastro" element={<Cadastro/>}/>
+          <Route path="/Administrador" element={<Administrador/>}/>
+          <Route path="/Post" element={<Post/>}/>
+          
         </Routes>
       </BrowserRouter>
     </div>
