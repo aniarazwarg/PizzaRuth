@@ -1,4 +1,4 @@
-import { Navbar, Container, Image, Row, Col, Nav, Button } from "react-bootstrap";
+import { Navbar, Container, Image, Row, Col, Nav, Button, Form } from "react-bootstrap";
 import Menu from "./Menu";
 import CardPizzas from "../components/cardPizzas";
 import CardEntradinhas from "../components/cardEntradinhas";
@@ -13,35 +13,47 @@ import promocao3 from "../assets/promocao3.jpeg"
 import qr from "../assets/qrc.jpg"
 import ios from "../assets/ios.png"
 import play from "../assets/play.png"
-import { useLocation } from "react-router-dom";
+import { useLocation, Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 
 
 function Cardapio() {
-  
-  
-  // function Form() {
-    
-  //   function data() {
-  //     fetch('viacep.com.br/ws/' + dataRecieved + '/json/')
-  //     .then((response) => response.json())
-  //     .then((json) => setUsers(json))
-  // }
-  // }
-  // const location = useLocation();
-  // const dataRecieved = location.state.data;
 
-//API busca CEP
-  const [cep, setCep] = useState('');
-  function data() {
-    fetch('viacep.com.br/ws/01001000/json/')
-    .then((response) => response.json())
-    .then((json) => setCep(json))
+  const [usuarios, setUsuarios] = useState([]);
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const { id } = useParams() || null;
+
+  const handleEmailChange = (text) => {
+    setEmail(text.target.value)
   }
+  const handleSenhaChange = (text) => {
+    setSenha(text.target.value)
+  }
+
+
+  function data() {
+      fetch('http://localhost/api/usuario')
+      .then((response) => response.json())
+      .then((json) => setUsuarios(json))
+  }
+
+  function validaUsuario() {
+    usuarios.forEach((usuario) => {
+      if (usuario.email === email && usuario.senha === senha) {
+        alert("Login realizado com sucesso!");
+      } else {
+        window.location.reload();
+        alert("Email ou senha inválidos")
+      }
+    })
+  }
+
 
   useEffect(() => {
     data();
+    console.log(id)
   }, []);
 
 
@@ -49,17 +61,31 @@ function Cardapio() {
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand href="/Cardapio">
+          <Navbar.Brand href="/Home">
             <Image src={Logo} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link style={{ color: "red" }} href="/">
-                Início
-              </Nav.Link>
-              <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
-              <Nav.Link href="#link">Administrador</Nav.Link>
+            <Nav className="me-auto d-flex justify-content-between w-100">
+              <Container className="d-flex flex-row">
+                <Nav.Link style={{ color: "red" }} href="/Home">
+                  Início
+                </Nav.Link>
+                <Nav.Link href="/CadastroPizzas">Cadastrar pizzas</Nav.Link>
+              </Container>
+              <Container className="d-flex flex-row align-items-center justify-content-center">
+                <Link className="me-1 ms-1" to={"/Login"}>
+                  <Button style={{ width: '100%' }} variant="danger" type="submit">
+                    Entrar
+                  </Button>
+                </Link>
+                <Link className="me-1 ms-1" to={"/Cadastro"}>
+                  <Button style={{ width: '100%' }} variant="secondary" type="submit">
+                    Cadastrar
+                  </Button>
+                </Link>
+              </Container>
+              
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -105,9 +131,6 @@ function Cardapio() {
           </Row>
           <Row style={{ marginBottom: 30 }}>
             <Button style={{ fontWeight: 'bold', padding: 15, borderRadius: 40 }} variant="outline-dark">Ver cardápio completo</Button>
-          </Row>
-          <Row>
-            <p>{cep.logradouro}</p>
           </Row>
           <Row
             style={{

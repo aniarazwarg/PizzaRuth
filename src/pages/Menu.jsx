@@ -17,12 +17,6 @@ function Menu(){
             <Button style={{backgroundColor: 'red', border:'none'}}>
                 <a style={{color: 'white', textDecorationLine:'none'}} href="/Produtos">Produtos</a>
             </Button>
-            <Button style={{backgroundColor: 'red', border:'none'}}>
-                <a style={{color: 'white', textDecorationLine:'none'}} href="/Administrador">Post</a>
-            </Button>
-            <Button style={{backgroundColor: 'red', border:'none'}}>
-                <a style={{color: 'white', textDecorationLine:'none'}} href="/Post">Novo Post</a>
-            </Button>
            
        </div>
     )

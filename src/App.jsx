@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Contato from "./pages/Entrar";
 import Home from "./pages/Home";
 import Sobre from "./pages/Criar";
@@ -13,8 +13,8 @@ import Usuario from "./pages/Usuario";
 import CEPForm from "./pages/searchCep";
 import Produtos from "./pages/Produtos";
 import Cadastro from "./pages/Cadastro";
-import Administrador from "./pages/Administrador";
-import Post from "./pages/Post";
+import CadastroPizzas from "./pages/CadastroPizzas";
+import Login from "./pages/Login";
 
 function App() {
 
@@ -22,18 +22,18 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/Home" element ={<Home/>}/>
+          <Route path="/" element ={<Cardapio/>}/>
           <Route path="/Entrar" element ={<Entrar/>}/>
           <Route path="/Criar" element ={<Criar/>}/>
           <Route path="/exemploMap" element={<ExemploMap/>}/>
-          <Route path="/" element={<Cardapio/>}/>
+          <Route path="/Home/:id" element={<Cardapio/>}/>
+          <Route path="/Home" element={<Cardapio/>}/>
           <Route path="/Usuario" element={<Usuario/>}/>
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
+          <Route path="/CadastroPizzas" element={<CadastroPizzas/>}/>
+          <Route path="/Login" element={<Login/>}/>
           <Route path="/Cadastro" element={<Cadastro/>}/>
-          <Route path="/Administrador" element={<Administrador/>}/>
-          <Route path="/Post" element={<Post/>}/>
-          
         </Routes>
       </BrowserRouter>
     </div>
