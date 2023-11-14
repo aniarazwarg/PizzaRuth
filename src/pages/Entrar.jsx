@@ -66,7 +66,7 @@ function Entrar() {
           <Row>
           <Col xs={6}>
               <img
-                src="https://www.pizzahut.com.br/assets/account-art.97b4e2c7.svg"
+                src="https://pizzahut.com.br/assets/account-art.97b4e2c7.svg"
                 alt="new"
               />
             </Col>

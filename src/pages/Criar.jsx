@@ -1,20 +1,79 @@
 import Menu from "./Menu";
-import Button from "react-bootstrap/Button";
+import { Navbar, Container, Image, Row, Col, Nav, Button, Form, FormLabel, InputGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import { useLocation, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Logo from "../assets/logo_ruth2.png";
+import "bootstrap/dist/css/bootstrap.min.css";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Image from "react-bootstrap/Image";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Logo from "../assets/logo_ruth.png";
 import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
-import { Form, FormLabel, InputGroup } from "react-bootstrap";
+
 
 function Criar() {
+  const [senha, setSenha] = useState('');
+  const [email, setEmail] = useState('');
+  const [cep, setCep] = useState(null);
+  const [endereco, setEndereco] = useState([]);
+
+  const handleCepChange = (e) => {
+    const newCep = e.target.value;
+    setCep(newCep);
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+  };
+
+  const handleSenhaChange = (e) => {
+    const newSenha = e.target.value;
+    setSenha(newSenha);
+  };
+
+
+
+  function data() {
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then((response) => response.json())
+      .then((json) => setEndereco(json))
+  }
+
+  function criar() {
+    fetch('http://localhost/api/cadastrar', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email,
+        senha: senha,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      },
+
+    })
+      .then(response => response.json())
+      .then(json => console.log(json))
+      .catch(err => console.log(err));
+  }
+
+  function cadastrar() {
+    if (!email || !senha) {
+      return alert("Preencha todos os campos");
+    }
+    else {
+      criar();
+      return alert("Cadastro realizado com sucesso!")
+    }
+
+
+  }
+
+
+  useEffect(() => {
+  }, []);
+
+
   return (
     <div>
        <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
@@ -42,30 +101,17 @@ function Criar() {
                     </p>
                     
                 </Col>
-                <Col md={6}><Image src={Logo} rounded style={{padding:10, width:700,}}/></Col>
+                <Col md={6}><Image src={Logo} rounded style={{padding:10, width:350,}}/></Col>
             </Row>
-            {/* <Row>
-                <Col md={12} style={{
-            height:5,
-          borderTop:1,
-          borderColor:"black",
-          backgroundColor:"black",
-          margin: 0,
-          }}> </Col>
-            </Row> */}
-            
-            
-       
-      
+           
         </Container>
-        
       </Navbar>
       <div>
-        <Container style={{padding:100}}>
+        <Container style={{ padding: 100 }}>
           <Row>
             <Col xs={6}>
               <img
-                src="https://www.pizzahut.com.br/assets/account-art.97b4e2c7.svg"
+                src="https://pizzahut.com.br/assets/account-art.97b4e2c7.svg"
                 alt="new"
               />
             </Col>
@@ -85,60 +131,81 @@ function Criar() {
                   <Card.Title style={{ width: "55%" }}>
                     Criar minha conta
                   </Card.Title>
-                  <Card.Text>Boa, vamos começar!</Card.Text>
+                  {/* <Card.Text>Boa, vamos começar!</Card.Text> */}
                   <Form>
-                    <Form.Group>
-                      <Form.Label style={{ marginTop: 20 }}>
-                        Qual seu nome e sobrenome?
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Informa pra gente seu nome completo"
-                        style={{
+                    <Form.Group className="mb-3 mt-5" controlId="email">
+                      <Form.Label>Endereço de email</Form.Label>
+                      <Form.Control style={{
                           borderRadius: 20,
                           borderColor: "black",
                           padding: 10,
-                        }}
-                      ></Form.Control>
+                        }} type="email" placeholder="Digite seu email" onChange={handleEmailChange} />
+                      {/* <Form.Text className="text-muted">
+                                    We'll never share your email with anyone else.
+                                </Form.Text> */}
                     </Form.Group>
-                    <Form.Group>
-                      <Form.Label style={{ marginTop: 20 }}>
-                        Como você prefere ser chamado?
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Tem algum apelido ou preferência?"
-                        style={{
+                    <Form.Group className="mb-3" controlId="senha">
+                      <Form.Label>Senha</Form.Label>
+                      <Form.Control  style={{
                           borderRadius: 20,
                           borderColor: "black",
                           padding: 10,
-                        }}
-                      ></Form.Control>
+                        }} type="password" placeholder="Password" onChange={handleSenhaChange} />
                     </Form.Group>
-                    <Form.Group>
-                      <Form.Label style={{ marginTop: 20 }}>
-                        Quando é seu aniversário?
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Informa pra gente sua data de nascimento"
-                        style={{
+            
+                    <Form.Group className="mb-3" controlId="cep">
+                      <Form.Label>CEP</Form.Label>
+                      <Row>
+                        <Col md={7}>
+                          <Form.Control  style={{
                           borderRadius: 20,
                           borderColor: "black",
                           padding: 10,
-                        }}
-                      ></Form.Control>
-                    </Form.Group>
-                  </Form>
-                  <Button
-                    style={{
+                        }} type="number" placeholder="Digite seu CEP" onChange={handleCepChange} />
+                        </Col>
+                        <Col  md={4}>
+                          <Button style={{
                       width: "100%",
-                      backgroundColor: "#D3D3D3",
+                      backgroundColor: "black",
+                      borderRadius: 20,
+                      borderWidth: 0,
+                      padding:10,
+  
+                    }}onClick={() => { data() }}>Procurar</Button>
+                        </Col>
+                      </Row>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="endereco">
+                      <Form.Label>Endereço</Form.Label>
+                      <Form.Control type="text" placeholder="Endereço" value={endereco.logradouro} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="bairro">
+                      <Form.Label>Bairro</Form.Label>
+                      <Form.Control type="text" placeholder="Bairro" value={endereco.bairro} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="cidade">
+                      <Form.Label>Cidade</Form.Label>
+                      <Form.Control type="text" placeholder="Cidade" value={endereco.localidade} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="estado">
+                      <Form.Label>Estado</Form.Label>
+                      <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco(e)} />
+                    </Form.Group>
+                    <Col className="d-flex justify-content-center">
+                      <Button style={{
+                      width: "100%",
+                      backgroundColor: "red",
                       borderRadius: 20,
                       borderWidth: 0,
                       marginTop: 20,
                       padding: 10,
-                    }}
-                  >
-                    Continuar
-                  </Button>
+                    }} variant="primary" type="submit" href="/" onClick={() => cadastrar()}>
+                        Cadastrar
+                      </Button>
+                    </Col>
+                  
+                  </Form>
+                 
                   <Button
                     style={{
                       width: "100%",
@@ -157,7 +224,7 @@ function Criar() {
                     <p>
                       Já tem uma conta? <a href="">Acesse aqui</a>{" "}
                     </p>
-                    </div>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
