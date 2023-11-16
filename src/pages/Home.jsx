@@ -108,7 +108,7 @@ function Home() {
                   Peça sua pizza em casa ou retire na loja mais próxima
                 </Card.Title>
                 <Card.Text>
-                  Informe seu endereço para encontrarmos a Pizza Hut mais
+                  Informe seu cep para encontrarmos a Pizza Hut mais
                   próxima de você
                 </Card.Text>
                 <Form onSubmit={handleSubmit}>

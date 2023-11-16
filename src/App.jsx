@@ -26,8 +26,8 @@ function App() {
           <Route path="/Entrar" element ={<Entrar/>}/>
           <Route path="/Criar" element ={<Criar/>}/>
           <Route path="/exemploMap" element={<ExemploMap/>}/>
-          <Route path="/Home/:id" element={<Cardapio/>}/>
-          <Route path="/Home" element={<Cardapio/>}/>
+          <Route path="/:id" element={<Cardapio/>}/>
+          <Route path="/Home" element={<Home/>}/>
           <Route path="/Usuario" element={<Usuario/>}/>
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
