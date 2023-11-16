@@ -11,22 +11,22 @@ import axios from 'axios';
  
 function Cadastro() {
 
-        const [nomePizza, setNomePizza] = useState('');
-        const [descricaoPizza, setDescricaoPizza] = useState('');
-        const [valorPizza, setValorPizza] = useState('');
-        const [fotoPizzaFile, setFotoPizzaFile] = useState(null);
+        const [sabor, setsabor] = useState('');
+        const [descricao, setdescricao] = useState('');
+        const [preco, setpreco] = useState('');
+        const [imagemFile, setimagemFile] = useState(null);
     
-        const handleNomePizzaChange = (e) => setNomePizza(e.target.value);
-        const handleDescricaoPizzaChange = (e) => setDescricaoPizza(e.target.value);
-        const handleValorPizzaChange = (e) => setValorPizza(e.target.value);
-        const handleFotoPizzaFileChange = (e) => setFotoPizzaFile(e.target.files[0]);
+        const handlesaborChange = (e) => setsabor(e.target.value);
+        const handledescricaoChange = (e) => setdescricao(e.target.value);
+        const handleprecoChange = (e) => setpreco(e.target.value);
+        const handleimagemFileChange = (e) => setimagemFile(e.target.files[0]);
     
         const handleCadastro = () => {
             const formData = new FormData();
-            formData.append('nomePizza', nomePizza);
-            formData.append('descricaoPizza', descricaoPizza);
-            formData.append('valorPizza', valorPizza);
-            formData.append('fotoPizza', fotoPizzaFile);
+            formData.append('sabor', sabor);
+            formData.append('descricao', descricao);
+            formData.append('preco', preco);
+            formData.append('imagem', imagemFile);
         
             axios.post('http://localhost/api/cadastrarPizza', formData)
                 .then(response => {
@@ -40,7 +40,7 @@ function Cadastro() {
         };
     
         const handleCadastrar = () => {
-            if (!nomePizza || !descricaoPizza || !valorPizza || !fotoPizzaFile) {
+            if (!sabor || !descricao || !preco || !imagemFile) {
                 return alert("Preencha todos os campos obrigatórios");
             } else {
                 handleCadastro();
@@ -107,21 +107,21 @@ function Cadastro() {
                   </Card.Title>
                   {/* <Card.Text>Boa, vamos começar!</Card.Text> */}
                   <Form enctype="multipart/form-data">
-                            <Form.Group className="mb-3" controlId="nomePizza">
+                            <Form.Group className="mb-3" controlId="sabor">
                                 <Form.Label>Nome da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite o nome da pizza" onChange={handleNomePizzaChange} />
+                                <Form.Control type="text" placeholder="Digite o nome da pizza" onChange={handlesaborChange} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="descricaoPizza">
+                            <Form.Group className="mb-3" controlId="descricao">
                                 <Form.Label>Descrição da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite a descrição da pizza" onChange={handleDescricaoPizzaChange} />
+                                <Form.Control type="text" placeholder="Digite a descrição da pizza" onChange={handledescricaoChange} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="valorPizza">
+                            <Form.Group className="mb-3" controlId="preco">
                                 <Form.Label>Valor da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite o valor da pizza" onChange={handleValorPizzaChange} />
+                                <Form.Control type="text" placeholder="Digite o valor da pizza" onChange={handleprecoChange} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="fotoPizza">
+                            <Form.Group className="mb-3" controlId="imagem">
                                 <Form.Label>Foto da Pizza</Form.Label>
-                                <Form.Control type="file" onChange={handleFotoPizzaFileChange} />
+                                <Form.Control type="file" onChange={handleimagemFileChange} />
                             </Form.Group>
                             <Col className="d-flex justify-content-center">
                                 <Button style={{ width: '100%' }} variant="primary" type="button" onClick={handleCadastrar}>

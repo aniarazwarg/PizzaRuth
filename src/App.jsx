@@ -11,7 +11,7 @@ import ExemploMap from "./pages/exemploMap";
 import Cardapio from "./pages/Cardapio";
 import Usuario from "./pages/Usuario";
 import CEPForm from "./pages/searchCep";
- import Produtos from "./pages/Produtos";
+import Produtos from "./pages/Produtos";
 import Cadastro from "./pages/Cadastro";
 // import CadastroPizzas from "./pages/CadastroPizzas";
 // import Login from "./pages/Login";
