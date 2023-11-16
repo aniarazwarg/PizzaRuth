@@ -31,9 +31,8 @@ function App() {
           <Route path="/Usuario" element={<Usuario/>}/>
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
-          {/* <Route path="/CadastroPizzas" element={<CadastroPizzas/>}/> */}
-          {/* <Route path="/Login" element={<Login/>}/>
-          <Route path="/Cadastro" element={<Cadastro/>}/> */}
+          <Route path="/Cadastro" element={<Cadastro/>}/>
+          
         </Routes>
       </BrowserRouter>
     </div>
