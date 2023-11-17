@@ -14,12 +14,23 @@ import Pizza from "../assets/pizza.jpg";
 function Criar() {
   const [senha, setSenha] = useState('');
   const [email, setEmail] = useState('');
-  const [cep, setCep] = useState(null);
-  const [endereco, setEndereco] = useState([]);
+  const [Funcao, setFuncao] = useState('');
+  const [endereco, setEndereco] = useState({
+    cep: "",
+    logradouro: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    estado: "",
+  });
 
   const handleCepChange = (e) => {
     const newCep = e.target.value;
-    setCep(newCep);
+  
+    // Remova caracteres não numéricos do CEP
+    const cleanedCep = newCep.replace(/\D/g, '');
+  
+    setEndereco((prevEndereco) => ({ ...prevEndereco, cep: cleanedCep }));
   };
 
   const handleEmailChange = (e) => {
@@ -32,25 +43,30 @@ function Criar() {
     setSenha(newSenha);
   };
 
-
+  const handleFuncaoChange = (e) => {
+    const newFuncao = e.target.value;
+    setFuncao(newFuncao);
+  };
 
   function data() {
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+    
+      // Valide o CEP antes de fazer a chamada à API
+      if (!endereco.cep || endereco.cep.length !== 8) {
+        alert("CEP inválido. Certifique-se de inserir um CEP válido.");
+        return;
+      }
+      fetch(`https://viacep.com.br/ws/${endereco.cep}/json/`)
       .then((response) => response.json())
       .then((json) => setEndereco(json))
+      .catch((error) => console.error("Erro ao obter dados do CEP:", error));
   }
-
-  function criar() {
+  function criar(requestBody) {
     fetch('http://localhost/api/cadastrar', {
       method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        senha: senha,
-      }),
+      body: JSON.stringify(requestBody),
       headers: {
-        "Content-type": "application/json; charset=UTF-8"
+        "Content-type": "application/json; charset=UTF-8",
       },
-
     })
       .then(response => response.json())
       .then(json => console.log(json))
@@ -60,19 +76,21 @@ function Criar() {
   function cadastrar() {
     if (!email || !senha) {
       return alert("Preencha todos os campos");
-    }
-    else {
-      criar();
-      return alert("Cadastro realizado com sucesso!")
-    }
+    } else {
+      const requestBody = {
+        email: email,
+        senha: senha,
+        funcao: Funcao,
+        endereco: endereco,
+      };
 
-
+      criar(requestBody);
+      return alert("Cadastro realizado com sucesso!");
+    }
   }
-
 
   useEffect(() => {
   }, []);
-
 
   return (
     <div>
@@ -144,6 +162,7 @@ function Criar() {
                                     We'll never share your email with anyone else.
                                 </Form.Text> */}
                     </Form.Group>
+
                     <Form.Group className="mb-3" controlId="senha">
                       <Form.Label>Senha</Form.Label>
                       <Form.Control  style={{
@@ -154,31 +173,57 @@ function Criar() {
                     </Form.Group>
             
                     <Form.Group className="mb-3" controlId="cep">
-                      <Form.Label>CEP</Form.Label>
-                      <Row>
-                        <Col md={7}>
-                          <Form.Control  style={{
-                          borderRadius: 20,
-                          borderColor: "black",
-                          padding: 10,
-                        }} type="number" placeholder="Digite seu CEP" onChange={handleCepChange} />
-                        </Col>
-                        <Col  md={4}>
-                          <Button style={{
-                      width: "100%",
-                      backgroundColor: "black",
-                      borderRadius: 20,
-                      borderWidth: 0,
-                      padding:10,
-  
-                    }}onClick={() => { data() }}>Procurar</Button>
-                        </Col>
-                      </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="endereco">
-                      <Form.Label>Endereço</Form.Label>
-                      <Form.Control type="text" placeholder="Endereço" value={endereco.logradouro} />
-                    </Form.Group>
+        <Form.Label>CEP</Form.Label>
+        <Row>
+          <Col md={7}>
+          <Form.Control
+  style={{
+    borderRadius: 20,
+    borderColor: "black",
+    padding: 10,
+  }}
+  type="text"  // Altere para text
+  placeholder="Digite seu CEP"
+  value={endereco.cep || ''}
+  onChange={handleCepChange}
+/>
+          </Col>
+          <Col md={4}>
+            <Button
+              style={{
+                width: "100%",
+                backgroundColor: "black",
+                borderRadius: 20,
+                borderWidth: 0,
+                padding: 10,
+              }}
+              onClick={() => { data() }}
+            >
+              Procurar
+            </Button>
+          </Col>
+        </Row>
+      </Form.Group>
+
+                    
+<Form.Group className="mb-3" controlId="endereco">
+  <Form.Label>Endereço</Form.Label>
+  <Form.Control
+    type="text"
+    placeholder="Endereço"
+    value={endereco.logradouro}
+    readOnly // Adiciona readOnly para evitar warnings sobre componente não controlado
+  />
+</Form.Group>
+<Form.Group className="mb-3" controlId="numero">
+  <Form.Label>Número</Form.Label>
+  <Form.Control
+    type="text"
+    placeholder="Número"
+    value={endereco.numero || ''} // Usa uma string vazia se numero for undefined
+    onChange={(e) => setEndereco({ ...endereco, numero: e.target.value })}
+  />
+</Form.Group>
                     <Form.Group className="mb-3" controlId="bairro">
                       <Form.Label>Bairro</Form.Label>
                       <Form.Control type="text" placeholder="Bairro" value={endereco.bairro} />
@@ -188,9 +233,18 @@ function Criar() {
                       <Form.Control type="text" placeholder="Cidade" value={endereco.localidade} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="estado">
-                      <Form.Label>Estado</Form.Label>
-                      <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco(e)} />
-                    </Form.Group>
+  <Form.Label>Estado</Form.Label>
+  <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco({ ...endereco, uf: e.target.value })} />
+</Form.Group>
+                    <Form.Group className="mb-3" controlId="Função de Usuário">
+        <Form.Label>Função de Usuário</Form.Label>
+        <Form.Control as="select" onChange={handleFuncaoChange} value={Funcao}>
+          <option value="">Selecione a Função de Usuário</option>
+          <option value="cliente">Cliente</option>
+          <option value="admin">Funcionário</option>
+          
+        </Form.Control>
+      </Form.Group>
                     <Col className="d-flex justify-content-center">
                       <Button style={{
                       width: "100%",

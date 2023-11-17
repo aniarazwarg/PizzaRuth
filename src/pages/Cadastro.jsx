@@ -13,38 +13,42 @@ function Cadastro() {
 
         const [sabor, setsabor] = useState('');
         const [descricao, setdescricao] = useState('');
-        const [preco, setpreco] = useState('');
         const [imagemFile, setimagemFile] = useState(null);
+        const [preco, setpreco] = useState('');
+        const [categoria, setcategoria] = useState('');
     
         const handlesaborChange = (e) => setsabor(e.target.value);
         const handledescricaoChange = (e) => setdescricao(e.target.value);
-        const handleprecoChange = (e) => setpreco(e.target.value);
         const handleimagemFileChange = (e) => setimagemFile(e.target.files[0]);
+        const handleprecoChange = (e) => setpreco(e.target.value);
+        const handleCategoriaChange = (e) => setcategoria(e.target.value); // Nova função para atualizar a categoria
     
-        const handleCadastro = () => {
-            const formData = new FormData();
-            formData.append('sabor', sabor);
-            formData.append('descricao', descricao);
-            formData.append('preco', preco);
-            formData.append('imagem', imagemFile);
+        const handleCadastro = async () => {
+            try {
+                const formData = new FormData();
+                formData.append('sabor', sabor);
+                formData.append('descricao', descricao);
+                formData.append('imagem', imagemFile);
+                formData.append('preco', preco);
+                formData.append('categoria', categoria); // Adiciona a categoria ao FormData
         
-            axios.post('http://localhost/api/cadastrarPizza', formData)
-                .then(response => {
-                    console.log(response.data);
-                    // Lógica para lidar com a resposta, se necessário
-                })
-                .catch(error => {
-                    console.error('Erro ao cadastrar pizza:', error);
-                    // Lógica para lidar com erros
-                });
+                const response = await axios.post('http://localhost/api/cadastrarPizza', formData);
+        
+                console.log(response.data);
+                alert('Produto cadastrada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao cadastrar produto:', error.response || error);
+                alert('Erro ao cadastrar produto');
+            }
         };
-    
-        const handleCadastrar = () => {
-            if (!sabor || !descricao || !preco || !imagemFile) {
-                return alert("Preencha todos os campos obrigatórios");
+        const handleCadastrar = async (e) => {
+            e.preventDefault(); // Evita o comportamento padrão do envio do formulário
+        
+            if (!sabor || !descricao || !imagemFile || !preco || !categoria) {
+                alert("Preencha todos os campos obrigatórios");
             } else {
-                handleCadastro();
-                return alert("Cadastro da pizza realizado com sucesso!");
+                await handleCadastro();
+                // alert("Cadastro da pizza realizado com sucesso!");
             }
         };
     
@@ -71,7 +75,7 @@ function Cadastro() {
             }}>
                
                     <p >
-                       <a style={{color:"red"}} href="/"> Voltar para a Home</a>{""}
+                       <a style={{color:"red"}} href="/Cardapio"> Voltar para Cardapio </a>{""}
                     </p>
                     
                 </Col>
@@ -106,7 +110,7 @@ function Cadastro() {
                     Cadastrar nova Pizza!
                   </Card.Title>
                   {/* <Card.Text>Boa, vamos começar!</Card.Text> */}
-                  <Form enctype="multipart/form-data">
+                  <Form encType="multipart/form-data" onSubmit={handleCadastrar}>
                             <Form.Group className="mb-3" controlId="sabor">
                                 <Form.Label>Nome da Pizza</Form.Label>
                                 <Form.Control type="text" placeholder="Digite o nome da pizza" onChange={handlesaborChange} />
@@ -114,20 +118,31 @@ function Cadastro() {
                             <Form.Group className="mb-3" controlId="descricao">
                                 <Form.Label>Descrição da Pizza</Form.Label>
                                 <Form.Control type="text" placeholder="Digite a descrição da pizza" onChange={handledescricaoChange} />
+                                <Form.Group className="mb-3" controlId="imagem">
+                                <Form.Label>Foto da Pizza</Form.Label>
+                                <Form.Control type="file" onChange={handleimagemFileChange} />
+                            </Form.Group>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="preco">
                                 <Form.Label>Valor da Pizza</Form.Label>
                                 <Form.Control type="text" placeholder="Digite o valor da pizza" onChange={handleprecoChange} />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="imagem">
-                                <Form.Label>Foto da Pizza</Form.Label>
-                                <Form.Control type="file" onChange={handleimagemFileChange} />
-                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="categoria">
+        <Form.Label>Categoria</Form.Label>
+        <Form.Control as="select" onChange={handleCategoriaChange} value={categoria}>
+          <option value="">Selecione a categoria</option>
+          <option value="pizza">Pizza</option>
+          <option value="entradinha">Entradinha</option>
+          <option value="sobremesa">Sobremesa</option>
+          {/* Adicione outras opções de categoria conforme necessário */}
+        </Form.Control>
+      </Form.Group>
+                            
                             <Col className="d-flex justify-content-center">
-                                <Button style={{ width: '100%' }} variant="primary" type="button" onClick={handleCadastrar}>
-                                    Cadastrar Pizza
-                                </Button>
-                            </Col>
+          <Button style={{ width: '100%' }} variant="primary" type="submit">
+            Cadastrar Pizza
+          </Button>
+        </Col>
                         </Form>
  <div className="d-flex justify-content-center">
                     
