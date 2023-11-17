@@ -60,35 +60,42 @@ function Criar() {
       .then((json) => setEndereco(json))
       .catch((error) => console.error("Erro ao obter dados do CEP:", error));
   }
-  function criar(requestBody) {
-    fetch('http://localhost/api/cadastrar', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
+  function criar() {
+    fetch('http://localhost/api/cadastrar',{
+        method: 'POST',
+        body: JSON.stringify({
+            email:"",
+            senha:"",
+            endereco: "",
+            numero:"",
+            bairro:"",
+            cidade:"",
+            estado:"",     
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
     })
-      .then(response => response.json())
-      .then(json => console.log(json))
-      .catch(err => console.log(err));
-  }
+    .then(response => response.json()) 
+    .then(json => console.log(json))
+    .catch(err => console.log(err));
+}
 
-  function cadastrar() {
-    if (!email || !senha) {
+function cadastrar() {
+  if (!email || !senha) {
       return alert("Preencha todos os campos");
-    } else {
+  } else {
       const requestBody = {
-        email: email,
-        senha: senha,
-        funcao: Funcao,
-        endereco: endereco,
+          email: email,
+          senha: senha,
+          funcao: Funcao,
+          endereco: endereco,
       };
 
-      criar(requestBody);
+      criar(); // Remova o argumento aqui
       return alert("Cadastro realizado com sucesso!");
-    }
   }
-
+}
   useEffect(() => {
   }, []);
 
@@ -158,9 +165,7 @@ function Criar() {
                           borderColor: "black",
                           padding: 10,
                         }} type="email" placeholder="Digite seu email" onChange={handleEmailChange} />
-                      {/* <Form.Text className="text-muted">
-                                    We'll never share your email with anyone else.
-                                </Form.Text> */}
+                   
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="senha">
@@ -208,21 +213,11 @@ function Criar() {
                     
 <Form.Group className="mb-3" controlId="endereco">
   <Form.Label>Endereço</Form.Label>
-  <Form.Control
-    type="text"
-    placeholder="Endereço"
-    value={endereco.logradouro}
-    readOnly // Adiciona readOnly para evitar warnings sobre componente não controlado
-  />
+  <Form.Control type="text" placeholder="Endereço" value={endereco.logradouro} />
 </Form.Group>
 <Form.Group className="mb-3" controlId="numero">
   <Form.Label>Número</Form.Label>
-  <Form.Control
-    type="text"
-    placeholder="Número"
-    value={endereco.numero || ''} // Usa uma string vazia se numero for undefined
-    onChange={(e) => setEndereco({ ...endereco, numero: e.target.value })}
-  />
+  <Form.Control type="text" placeholder="Endereço" value={endereco.numero} />
 </Form.Group>
                     <Form.Group className="mb-3" controlId="bairro">
                       <Form.Label>Bairro</Form.Label>
@@ -234,7 +229,7 @@ function Criar() {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="estado">
   <Form.Label>Estado</Form.Label>
-  <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco({ ...endereco, uf: e.target.value })} />
+  <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco(e)} />
 </Form.Group>
                     <Form.Group className="mb-3" controlId="Função de Usuário">
         <Form.Label>Função de Usuário</Form.Label>
@@ -242,7 +237,6 @@ function Criar() {
           <option value="">Selecione a Função de Usuário</option>
           <option value="cliente">Cliente</option>
           <option value="admin">Funcionário</option>
-          
         </Form.Control>
       </Form.Group>
                     <Col className="d-flex justify-content-center">
