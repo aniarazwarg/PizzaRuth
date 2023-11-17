@@ -16,13 +16,12 @@ function Criar() {
   const [email, setEmail] = useState('');
   const [Funcao, setFuncao] = useState('');
   const [endereco, setEndereco] = useState({
-    cep: "",
-    logradouro: "",
-    numero: "",
-    bairro: "",
-    cidade: "",
-    estado: "",
   });
+  const [logradouro,setLogradouro] = useState('');
+  const [numero,setNumero] = useState('');
+  const [bairro,setBairro] = useState('');
+  const [cidade,setCidade] = useState('');
+  const [estado,setEstado] = useState('');
 
   const handleCepChange = (e) => {
     const newCep = e.target.value;
@@ -48,6 +47,32 @@ function Criar() {
     setFuncao(newFuncao);
   };
 
+  const handleLogradouroChange = (e) => {
+    const newLogradouro = e.target.value;
+    setLogradouro(newLogradouro);
+  };
+
+  const handleNumeroChange = (e) => {
+    const newNumero = e.target.value;
+    setNumero(newNumero);
+  };
+  const handleBairroChange = (e) => {
+    const newBairro = e.target.value;
+    setBairro(newBairro);
+  };
+
+  const handleCidadeChange = (e) => {
+    const newCidade = e.target.value;
+    setCidade(newCidade);
+  };
+
+  const handleEstadoChange = (e) => {
+    const newEstado = e.target.value;
+    setEstado(newEstado);
+  };
+
+
+
   function data() {
     
       // Valide o CEP antes de fazer a chamada à API
@@ -64,13 +89,14 @@ function Criar() {
     fetch('http://localhost/api/cadastrar',{
         method: 'POST',
         body: JSON.stringify({
-            email:"",
-            senha:"",
-            endereco: "",
-            numero:"",
-            bairro:"",
-            cidade:"",
-            estado:"",     
+            email:email,
+            senha:senha,
+            funcao: Funcao,
+            logradouro:logradouro,
+            numero:numero,
+            bairro:bairro,
+            cidade:cidade,
+            estado:estado,     
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -86,10 +112,14 @@ function cadastrar() {
       return alert("Preencha todos os campos");
   } else {
       const requestBody = {
-          email: email,
-          senha: senha,
-          funcao: Funcao,
-          endereco: endereco,
+        email:email,
+        senha:senha,
+        funcao: Funcao,
+        logradouro:logradouro,
+        numero:numero,
+        bairro:bairro,
+        cidade:cidade,
+        estado:estado,   
       };
 
       criar(); // Remova o argumento aqui
@@ -213,23 +243,23 @@ function cadastrar() {
                     
 <Form.Group className="mb-3" controlId="endereco">
   <Form.Label>Endereço</Form.Label>
-  <Form.Control type="text" placeholder="Endereço" value={endereco.logradouro} />
+  <Form.Control onChange={handleLogradouroChange}type="text" placeholder="Endereço" value={endereco.logradouro} />
 </Form.Group>
 <Form.Group className="mb-3" controlId="numero">
   <Form.Label>Número</Form.Label>
-  <Form.Control type="text" placeholder="Endereço" value={endereco.numero} />
+  <Form.Control onChange={handleNumeroChange} type="text" placeholder="Endereço" value={endereco.numero} />
 </Form.Group>
                     <Form.Group className="mb-3" controlId="bairro">
                       <Form.Label>Bairro</Form.Label>
-                      <Form.Control type="text" placeholder="Bairro" value={endereco.bairro} />
+                      <Form.Control  onChange={handleBairroChange}type="text" placeholder="Bairro" value={endereco.bairro} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="cidade">
                       <Form.Label>Cidade</Form.Label>
-                      <Form.Control type="text" placeholder="Cidade" value={endereco.localidade} />
+                      <Form.Control onChange={handleCidadeChange}type="text" placeholder="Cidade" value={endereco.localidade} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="estado">
   <Form.Label>Estado</Form.Label>
-  <Form.Control type="text" placeholder="Estado" value={endereco.uf} onChange={(e) => setEndereco(e)} />
+  <Form.Control onChange={handleEstadoChange} type="text" placeholder="Estado" value={endereco.uf} />
 </Form.Group>
                     <Form.Group className="mb-3" controlId="Função de Usuário">
         <Form.Label>Função de Usuário</Form.Label>
@@ -247,7 +277,7 @@ function cadastrar() {
                       borderWidth: 0,
                       marginTop: 20,
                       padding: 10,
-                    }} variant="primary" type="submit" href="/" onClick={() => cadastrar()}>
+                    }} variant="primary" type="submit"  onClick={() => criar()}>
                         Cadastrar
                       </Button>
                     </Col>
