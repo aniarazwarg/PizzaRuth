@@ -141,11 +141,11 @@ function getCadastrar(Request $request, Response $response, array $args)
         $stmt->bindParam(':email', $data['email']);
         $stmt->bindParam(':senha', $hashedPassword);
         $stmt->bindParam(':funcao', $data['funcao']);
-        $stmt->bindParam(':logradouro', $data['endereco']['logradouro']);
-        $stmt->bindParam(':numero', $data['endereco']['numero']);
-        $stmt->bindParam(':bairro', $data['endereco']['bairro']);
-        $stmt->bindParam(':cidade', $data['endereco']['cidade']);
-        $stmt->bindParam(':estado', $data['endereco']['estado']);
+        $stmt->bindParam(':logradouro', $data['logradouro']);
+        $stmt->bindParam(':numero', $data['numero']);
+        $stmt->bindParam(':bairro', $data['bairro']);
+        $stmt->bindParam(':cidade', $data['cidade']);
+        $stmt->bindParam(':estado', $data['estado']);
 
         $stmt->execute();
 
