@@ -43,6 +43,7 @@ $app->delete('/deletar/{id}', 'getDeletar');
 $app->put('/alterar/{id}', 'getAlterar');
 $app->get('/comentarios', 'getComentarios');
 $app->put('/curtidas/{id}', 'getCurtidas');
+$app->get('/login','getLogin');
 
 
 
@@ -54,6 +55,24 @@ function getConn()
         '',
         array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
     );
+}
+
+function getLogin(){
+    $conn = new PDO("mysql:host=localhost;dbname=database_name", "username", "password");
+
+// Consulta SQL
+$stmt = $conn->prepare("SELECT * FROM usuario WHERE email = :email");
+$stmt->bindParam(":email", $_POST["email"]);
+$stmt->execute();
+$user = $stmt->fetch();
+
+// Verifica se a senha está correta
+if (password_verify($_POST["senha"], $user["senha"])) {
+    // Senha correta
+} else {
+    // Senha incorreta
+}
+
 }
 
 function getProdutos(Request $request, Response $response, array $args)
