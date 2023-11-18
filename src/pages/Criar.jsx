@@ -244,6 +244,7 @@ function cadastrar() {
 <Form.Group className="mb-3" controlId="endereco">
   <Form.Label>Endereço</Form.Label>
   <Form.Control onChange={handleLogradouroChange}type="text" placeholder="Endereço" value={endereco.logradouro} />
+              <Form.Text >{logradouro}</Form.Text>
 </Form.Group>
 <Form.Group className="mb-3" controlId="numero">
   <Form.Label>Número</Form.Label>
@@ -277,7 +278,7 @@ function cadastrar() {
                       borderWidth: 0,
                       marginTop: 20,
                       padding: 10,
-                    }} variant="primary" type="submit"  onClick={() => criar()}>
+                    }} variant="primary" onClick={() => criar()}>
                         Cadastrar
                       </Button>
                     </Col>
