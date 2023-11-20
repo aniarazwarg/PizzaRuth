@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18-Nov-2023 às 02:15
--- Versão do servidor: 10.4.24-MariaDB
--- versão do PHP: 8.1.6
+-- Tempo de geração: 20/11/2023 às 02:01
+-- Versão do servidor: 10.4.28-MariaDB
+-- Versão do PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,16 +24,16 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `categoria`
+-- Estrutura para tabela `categoria`
 --
 
 CREATE TABLE `categoria` (
   `ID` int(11) NOT NULL,
   `NOME` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `categoria`
+-- Despejando dados para a tabela `categoria`
 --
 
 INSERT INTO `categoria` (`ID`, `NOME`) VALUES
@@ -46,7 +46,7 @@ INSERT INTO `categoria` (`ID`, `NOME`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `pizzas`
+-- Estrutura para tabela `pizzas`
 --
 
 CREATE TABLE `pizzas` (
@@ -56,21 +56,25 @@ CREATE TABLE `pizzas` (
   `imagem` varchar(300) NOT NULL,
   `preco` decimal(11,2) NOT NULL,
   `categoria` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `pizzas`
+-- Despejando dados para a tabela `pizzas`
 --
 
 INSERT INTO `pizzas` (`id`, `sabor`, `descricao`, `imagem`, `preco`, `categoria`) VALUES
-(1, 'Pepperoni', 'Fatias de pepperoni servidas sobre generosa camada de queijo hut e molho de tomate.', 'pepperoni.jpg', '33.00', ''),
-(2, 'Frango com Requeijão', 'Frango, queijo Hut e requeijão cremoso\r\n', 'pepperoni.jpg', '36.00', ''),
-(3, 'Brasileira', 'Molho de tomate, queijo Hut, requeijão, presunto e azeitonas verdes.', 'pepperoni.jpg', '58.00', '');
+(1, 'Pepperoni', 'Fatias de pepperoni servidas sobre generosa camada de queijo hut e molho de tomate.', 'pepperoni.jpg', 33.00, ''),
+(2, 'Frango com Requeijão', 'Frango, queijo Hut e requeijão cremoso\r\n', 'pepperoni.jpg', 36.00, ''),
+(3, 'Brasileira', 'Molho de tomate, queijo Hut, requeijão, presunto e azeitonas verdes.', 'pepperoni.jpg', 58.00, ''),
+(5, 'lingueça', 'com ovos medios', 'pepperoni.jpg', 69.00, 'pizza'),
+(6, 'Verdinha', 'mix de ervas', 'verdinha.jpg', 41.20, 'pizza'),
+(7, 'cacetinho', 'pequeno cacete bem recheado', 'breadstick.png', 18.00, 'entradinha'),
+(8, 'sorvete 5 leites', 'leite condensado, creme de leite, leite em pó, leite de vaca...', 'leitinho.png', 33.00, 'sobremesa');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produto`
+-- Estrutura para tabela `produto`
 --
 
 CREATE TABLE `produto` (
@@ -82,21 +86,21 @@ CREATE TABLE `produto` (
   `QUANTIDADE` int(11) NOT NULL DEFAULT 0,
   `DISPONIVEL` tinyint(1) NOT NULL DEFAULT 1,
   `DT_CADASTRO` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `produto`
+-- Despejando dados para a tabela `produto`
 --
 
 INSERT INTO `produto` (`ID`, `NOME`, `DESCRICAO`, `PRECO_COMPRA`, `PRECO_VENDA`, `QUANTIDADE`, `DISPONIVEL`, `DT_CADASTRO`) VALUES
-(1, 'Arroz', 'Agulinha Tipo 1', '8.70', '10.00', 30, 1, '2023-10-05 23:04:04'),
-(2, 'Feijão', 'Carioca', '5.83', '9.00', 47, 1, '2023-10-05 23:04:04'),
-(3, 'Açucar', 'Refinado', '4.33', '6.00', 27, 0, '2023-10-05 23:04:04');
+(1, 'Arroz', 'Agulinha Tipo 1', 8.70, 10.00, 30, 1, '2023-10-05 23:04:04'),
+(2, 'Feijão', 'Carioca', 5.83, 9.00, 47, 1, '2023-10-05 23:04:04'),
+(3, 'Açucar', 'Refinado', 4.33, 6.00, 27, 0, '2023-10-05 23:04:04');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produtos`
+-- Estrutura para tabela `produtos`
 --
 
 CREATE TABLE `produtos` (
@@ -106,32 +110,32 @@ CREATE TABLE `produtos` (
   `tipo` varchar(20) NOT NULL,
   `imagem` varchar(100) NOT NULL,
   `descricao` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Extraindo dados da tabela `produtos`
+-- Despejando dados para a tabela `produtos`
 --
 
 INSERT INTO `produtos` (`id`, `produto`, `preco`, `tipo`, `imagem`, `descricao`) VALUES
-(1, 'teste', '123.00', 'pizza', '', 'aaa'),
-(2, 'Mussarela', '50.00', 'pizza', 'C:\\fakepath\\pepperoni.jpg', 'pizza boa'),
-(3, '', '0.00', '', 'pepperoni.jpg', '');
+(1, 'teste', 123.00, 'pizza', '', 'aaa'),
+(2, 'Mussarela', 50.00, 'pizza', 'C:\\fakepath\\pepperoni.jpg', 'pizza boa'),
+(3, '', 0.00, '', 'pepperoni.jpg', '');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produto_categoria`
+-- Estrutura para tabela `produto_categoria`
 --
 
 CREATE TABLE `produto_categoria` (
   `ID_PRODUTO` bigint(20) NOT NULL,
   `ID_CATEGORIA` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuarios`
+-- Estrutura para tabela `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -144,62 +148,64 @@ CREATE TABLE `usuarios` (
   `bairro` varchar(100) NOT NULL,
   `cidade` varchar(100) NOT NULL,
   `estado` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Extraindo dados da tabela `usuarios`
+-- Despejando dados para a tabela `usuarios`
 --
 
 INSERT INTO `usuarios` (`cd_cliente`, `email`, `senha`, `funcao`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`) VALUES
 (1, 'lucabarata@bol.com', '123', '', '', 0, '', '', ''),
 (6, 'teste1', 'teste1', '', '', 0, '', '', ''),
 (7, 'aaa', 'aaa', '', '', 0, '', '', ''),
-(8, 'luca', 'luca123', '', '', 0, '', '', '');
+(8, 'luca', 'luca123', '', '', 0, '', '', ''),
+(9, 'fvillelas.tecnico@gmail.com', '$2y$10$IETJphQtxGkNvq8GpbgibuQ', 'cliente', '', 412, '', '', ''),
+(10, 'issoeumemail@ficticio.com', '$2y$10$nH8wBd1D0v7c1LBr932tEed', 'cliente', '', 214, '', '', '');
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices para tabela `categoria`
+-- Índices de tabela `categoria`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `UC_NOME` (`NOME`);
 
 --
--- Índices para tabela `pizzas`
+-- Índices de tabela `pizzas`
 --
 ALTER TABLE `pizzas`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `produto`
+-- Índices de tabela `produto`
 --
 ALTER TABLE `produto`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Índices para tabela `produtos`
+-- Índices de tabela `produtos`
 --
 ALTER TABLE `produtos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `produto_categoria`
+-- Índices de tabela `produto_categoria`
 --
 ALTER TABLE `produto_categoria`
   ADD KEY `FK_PRODUTO` (`ID_PRODUTO`),
   ADD KEY `FK_CATEGORIA` (`ID_CATEGORIA`);
 
 --
--- Índices para tabela `usuarios`
+-- Índices de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`cd_cliente`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
@@ -212,7 +218,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de tabela `pizzas`
 --
 ALTER TABLE `pizzas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
@@ -230,14 +236,14 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- Restrições para despejos de tabelas
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `produto_categoria`
+-- Restrições para tabelas `produto_categoria`
 --
 ALTER TABLE `produto_categoria`
   ADD CONSTRAINT `FK_CATEGORIA` FOREIGN KEY (`ID_CATEGORIA`) REFERENCES `categoria` (`ID`),
