@@ -21,16 +21,8 @@ import { useState, useEffect } from "react";
 function Cardapio() {
 
   const [usuarios, setUsuarios] = useState([]);
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
   const { id } = useParams() || null;
 
-  const handleEmailChange = (text) => {
-    setEmail(text.target.value)
-  }
-  const handleSenhaChange = (text) => {
-    setSenha(text.target.value)
-  }
 
 
   function data() {
@@ -39,21 +31,9 @@ function Cardapio() {
       .then((json) => setUsuarios(json))
   }
 
-  function validaUsuario() {
-    usuarios.forEach((usuario) => {
-      if (usuario.email === email && usuario.senha === senha) {
-        alert("Login realizado com sucesso!");
-      } else {
-        window.location.reload();
-        alert("Email ou senha inválidos")
-      }
-    })
-  }
-
 
   useEffect(() => {
     data();
-    console.log(id)
   }, []);
 
 
@@ -71,7 +51,7 @@ function Cardapio() {
                 <Nav.Link style={{ color: "red" }} href="/Home">
                   Início
                 </Nav.Link>
-                <Nav.Link href="/CadastroPizzas">Cadastrar pizzas</Nav.Link>
+                <Nav.Link href="/CadastroProdutos">Cadastrar pizzas</Nav.Link>
               </Container>
               <Container className="d-flex flex-row align-items-center justify-content-center">
                 <Link className="me-1 ms-1" to={"/Login"}>

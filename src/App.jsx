@@ -15,6 +15,7 @@ import Produtos from "./pages/Produtos";
 import Cadastro from "./pages/Cadastro";
 import CadastroPizzas from "./pages/CadastroPizzas";
 import Login from "./pages/Login";
+import CadastroProdutos from "./pages/CadastroProdutos";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/CadastroPizzas" element={<CadastroPizzas/>}/>
           <Route path="/Login" element={<Login/>}/>
           <Route path="/Cadastro" element={<Cadastro/>}/>
+          <Route path="/CadastroProdutos" element={<CadastroProdutos/>}/>
         </Routes>
       </BrowserRouter>
     </div>

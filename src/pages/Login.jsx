@@ -39,23 +39,25 @@ function Login() {
         usuarios.forEach((usuario) => {
             if (usuario.email === email && usuario.senha === senha) {
                 alert("Login realizado com sucesso!");
+                setParam(usuario.cd_cliente)
+                console.log(usuario.cd_cliente)
+                // window.location.href = "/Home/" + param;
             }
         })
     }
 
-    if(usuarios.length == 0) {
-        data();
-        console.log('oi')
-    }
-    if(usuarios.length !== 0) {
-        console.log('tchau')
-        
-    }
 
+    // usuarios.forEach(usuario => {
+    //     if( usuario.email == email && usuario.senha == senha) {
+    //         setParam(usuario.cd_cliente)
+    //         console.log(usuario.cd_cliente)
+    //     }    
+    // });
     
-   
+    
+    
     useEffect(() => {
-        
+        data();
     }, []);
 
 
@@ -111,7 +113,7 @@ function Login() {
                         <Form.Label style={{ display: 'flex', justifyContent: 'center', width: '20%', fontWeight: 'bold' }}>Senha:</Form.Label>
                         <Form.Control placeholder="Digite sua senha" style={{ width: '80%' }} onChange={handleSenhaChange} />
                     </Form.Group>
-                    <Link style={{ width: '100%', display:'flex', justifyContent:'center', alignItems:'center', marginTop: 40, textDecoration:'none' }} to={`/Home/${param}`}>
+                    <Link to={'/Home'} style={{ width: '100%', display:'flex', justifyContent:'center', alignItems:'center', marginTop: 40, textDecoration:'none' }} >
                         <Button style={{ width: '30%' }} variant="secondary" type="submit" onClick={validaUsuario}>
                             Entrar
                         </Button>
