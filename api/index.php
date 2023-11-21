@@ -58,7 +58,7 @@ function getConn()
 }
 
 function getLogin(){
-    $conn = new PDO("mysql:host=localhost;dbname=database_name", "username", "password");
+    $conn = new PDO("mysql:host=localhost:3306;dbname=slimprodutos", "email", "senha");
 
 // Consulta SQL
 $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = :email");
@@ -69,10 +69,19 @@ $user = $stmt->fetch();
 // Verifica se a senha está correta
 if (password_verify($_POST["senha"], $user["senha"])) {
     // Senha correta
+    $response = [
+        'message' => 'Login bem-sucedido',
+        'user' => [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'funcao' => $user['funcao'],
+        ],
+    ];
+    echo json_encode($response);
 } else {
     // Senha incorreta
+    echo json_encode(['error' => 'Senha incorreta']);
 }
-
 }
 
 function getProdutos(Request $request, Response $response, array $args)
