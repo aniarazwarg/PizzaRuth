@@ -21,13 +21,28 @@ import { useHistory } from 'react-router-dom';
 function Cardapio() {
   
   const [funcaoUsuario, setFuncaoUsuario] = useState("");
+  const [usuarios, setUsuarios] = useState("");
+
 
   useEffect(() => {
-    const funcaoArmazenada = localStorage.getItem("funcaoUsuario");
-    if (funcaoArmazenada) {
-      setFuncaoUsuario(funcaoArmazenada);
-    }
+    fetch('http://localhost/api/usuario')
+      .then((response) => response.json())
+      .then((json) => setUsuarios (json));
   }, []);
+
+  usuarios.forEach(u => {
+    if(u.funcao == "cliente") {
+      setFuncaoUsuario("cliente")
+    }
+  });
+
+
+  // useEffect(() => {
+  //   const funcaoArmazenada = localStorage.getItem("funcaoUsuario");
+  //   if (funcaoArmazenada) {
+  //     setFuncaoUsuario(funcaoArmazenada);
+  //   }
+  // }, []);
   const [cep, setCep] = useState('');
   function data() {
     fetch('https://viacep.com.br/ws/01001000/json/')
@@ -82,12 +97,12 @@ function Cardapio() {
 
           {/* Novo bloco de Row para os botões condicionais */}
           <Row>
-            {funcaoUsuario === "cliente" && (
+            {/* {funcaoUsuario === "cliente" && (
               <Button variant="primary">Carrinho de Compras</Button>
             )}
             {funcaoUsuario === "funcionario" && (
               <Button variant="success">Cadastrar Produto</Button>
-            )}
+            )} */}
           </Row>
         </Container>
       </Navbar>

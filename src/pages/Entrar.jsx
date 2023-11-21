@@ -38,11 +38,11 @@ function Entrar() {
         const userData = await response.json();
         console.log("Usuário logado com sucesso:", userData);
       
-        // Atualiza o estado com a função do usuário
-        setFuncaoUsuario(userData.user.funcao);
+        // // Atualiza o estado com a função do usuário
+        // setFuncaoUsuario(userData.user.funcao);
       
-        // Redireciona para a página /cardapio
-        history.push("/cardapio");
+        // // Redireciona para a página /cardapio
+        // history.push("/cardapio");
       } else {
         console.error("Erro ao fazer login:", response.statusText);
       }
