@@ -13,8 +13,43 @@ import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
 import { Form, FormLabel, InputGroup } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom';
+
 
 function Entrar() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [funcaoUsuario, setFuncaoUsuario] = useState("");
+  const history = useHistory();
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://localhost/api/login", { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, senha }),
+      });
+  
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Usuário logado com sucesso:", userData);
+      
+        // Atualiza o estado com a função do usuário
+        setFuncaoUsuario(userData.user.funcao);
+      
+        // Redireciona para a página /cardapio
+        history.push("/cardapio");
+      } else {
+        console.error("Erro ao fazer login:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error.message);
+    }
+  };
   return (
     <div>
       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
@@ -93,7 +128,8 @@ function Entrar() {
                         Qual seu e-mail?
                       </Form.Label>
                       <Form.Control
-                        placeholder="Informa pra gente seu e-mail"
+                        placeholder="Informa pra gente seu e-mail" value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         style={{
                           borderRadius: 20,
                           borderColor: "black",
@@ -106,7 +142,8 @@ function Entrar() {
                         Qual sua senha?
                       </Form.Label>
                       <Form.Control
-                        placeholder="Agora informe uma senha"
+                        placeholder="Agora informe uma senha" value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
                         style={{
                           borderRadius: 20,
                           borderColor: "black",
@@ -114,33 +151,22 @@ function Entrar() {
                         }}
                       ></Form.Control>
                     </Form.Group>
-                    {/* <Form.Group>
-                      <Form.Label style={{ marginTop: 20 }}>
-                        Quando é seu aniversário?
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Informa pra gente sua data de nascimento"
-                        style={{
-                          borderRadius: 20,
-                          borderColor: "black",
-                          padding: 10,
-                        }}
-                      ></Form.Control>
-                    </Form.Group> */}
+                    
                   </Form>
                   <Button
-                    style={{
-                      width: "100%",
-                      backgroundColor: "#D3D3D3",
-                      borderRadius: 20,
-                      borderWidth: 0,
-                      marginTop: 20,
-                      marginBottom:20,
-                      padding: 10,
-                    }}
-                  >
-                    Acessar
-                  </Button>
+  style={{
+    width: "100%",
+    backgroundColor: "#D3D3D3",
+    borderRadius: 20,
+    borderWidth: 0,
+    marginTop: 20,
+    marginBottom: 20,
+    padding: 10,
+  }}
+  onClick={handleLogin}
+>
+  Acessar
+</Button>
                   
                   <div className="d-flex justify-content-center">
                     <p>

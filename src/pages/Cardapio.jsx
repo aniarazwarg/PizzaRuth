@@ -15,29 +15,24 @@ import ios from "../assets/ios.png"
 import play from "../assets/play.png"
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import { useHistory } from 'react-router-dom';
 
 
 function Cardapio() {
   
-  
-  // function Form() {
-    
-  //   function data() {
-  //     fetch('viacep.com.br/ws/' + dataRecieved + '/json/')
-  //     .then((response) => response.json())
-  //     .then((json) => setUsers(json))
-  // }
-  // }
-  // const location = useLocation();
-  // const dataRecieved = location.state.data;
+  const [funcaoUsuario, setFuncaoUsuario] = useState("");
 
-//API busca CEP
+  useEffect(() => {
+    const funcaoArmazenada = localStorage.getItem("funcaoUsuario");
+    if (funcaoArmazenada) {
+      setFuncaoUsuario(funcaoArmazenada);
+    }
+  }, []);
   const [cep, setCep] = useState('');
   function data() {
-    fetch('viacep.com.br/ws/01001000/json/')
-    .then((response) => response.json())
-    .then((json) => setCep(json))
+    fetch('https://viacep.com.br/ws/01001000/json/')
+      .then((response) => response.json())
+      .then((json) => setCep(json));
   }
 
   useEffect(() => {
@@ -47,21 +42,53 @@ function Cardapio() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary">
+        <Navbar
+        expand="lg"
+        className="bg-body-primary-fixed-top"
+        style={{
+          justifyContent: "center",
+          height: 50,
+          position: "fixed",
+          zIndex: 1000,
+          backgroundColor: "white",
+          left: 0,
+          right: 0,
+          width: "100%",
+        }}
+      >
         <Container>
-          <Navbar.Brand href="/Cardapio">
-            <Image src={Logo} />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link style={{ color: "red" }} href="/">
-                Início
-              </Nav.Link>
-              <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
-              <Nav.Link href="#link">Administrador</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
+          <Row>
+            <Col
+              md={4}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                marginLeft: 100,
+                marginTop: 30,
+              }}
+            >
+              <p>
+                <a style={{ color: "red" }} href="/">
+                  {" "}
+                  Voltar para a Home
+                </a>
+                {""}
+              </p>
+            </Col>
+            <Col md={6}>
+              <Image src={Logo} rounded style={{ padding: 10, width: 700 }} />
+            </Col>
+          </Row>
+
+          {/* Novo bloco de Row para os botões condicionais */}
+          <Row>
+            {funcaoUsuario === "cliente" && (
+              <Button variant="primary">Carrinho de Compras</Button>
+            )}
+            {funcaoUsuario === "funcionario" && (
+              <Button variant="success">Cadastrar Produto</Button>
+            )}
+          </Row>
         </Container>
       </Navbar>
       <Container style={{ width: "70%", marginTop: 40 }}>
