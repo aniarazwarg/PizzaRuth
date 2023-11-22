@@ -3,6 +3,7 @@ import Menu from "./Menu";
 import CardPizzas from "../components/cardPizzas";
 import CardEntradinhas from "../components/cardEntradinhas";
 import CardSobremesas from "../components/cardSobremesas";
+import UserProfile from '../components/userProfile';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pizza from "../assets/pizza.jpg";
 import Logo from "../assets/logo_ruth2.png";
@@ -15,22 +16,30 @@ import ios from "../assets/ios.png"
 import play from "../assets/play.png"
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 
 
 function Cardapio() {
+  const location = useLocation();
+  const [user, setUser] = useState(null);
+
+  // useEffect para buscar os dados do usuário quando o componente é montado
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost/api/login');
+        const userData = await response.json();
+        console.log('Dados do usuário após a chamada da API:', userData);
+        setUser(userData);
+      } catch (error) {
+        console.error('Erro ao obter dados do usuário', error);
+      }
+    };
   
-  
-  // function Form() {
-    
-  //   function data() {
-  //     fetch('viacep.com.br/ws/' + dataRecieved + '/json/')
-  //     .then((response) => response.json())
-  //     .then((json) => setUsers(json))
-  // }
-  // }
-  // const location = useLocation();
-  // const dataRecieved = location.state.data;
+    fetchUserData();
+  }, []);
+
 
 //API busca CEP
   const [cep, setCep] = useState('');
@@ -58,13 +67,19 @@ function Cardapio() {
               <Nav.Link style={{ color: "red" }} href="/">
                 Início
               </Nav.Link>
-              <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
-              <Nav.Link href="#link">Administrador</Nav.Link>
+              {/* <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
+              <Nav.Link href="#link">Administrador</Nav.Link> */}
+              
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
       <Container style={{ width: "70%", marginTop: 40 }}>
+
+      <Row style={{ marginTop: 20 }}>
+    <UserProfile user={user} />
+  </Row>
+
         <Image style={{ width: "100%" }} src={tartaruga} />
         <Container style={{ flexDirection: "row" }}>
           <Row style={{ display: "flex", justifyItems: 'center', justifyContent: 'space-between', alignItems: 'center', marginTop: 30 }}>

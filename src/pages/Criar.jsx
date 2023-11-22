@@ -9,9 +9,12 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
+import { useNavigate } from 'react-router-dom';
 
 
 function Criar() {
+  const navigate = useNavigate();
+
   const [senha, setSenha] = useState('');
   const [email, setEmail] = useState('');
   const [funcao, setfuncao] = useState('');
@@ -99,18 +102,24 @@ function Criar() {
             estado: estado,
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8",
-            "Accept": "application/json", // Adicione este header
+          "Content-type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
         },
-    })
-    .then(response => response.text())
-    .then(text => {
-        console.log(text); // Exibir a resposta do servidor no console
-        return JSON.parse(text); // Tentar analisar o JSON
-    })
-    .then(json => console.log(json))
-    .catch(err => console.log(err));
-}
+      })
+        .then(response => response.text())
+        .then(text => {
+          console.log(text); // Exibir a resposta do servidor no console
+          return JSON.parse(text); // Tentar analisar o JSON
+        })
+        .then(json => {
+          console.log(json);
+  
+          // Após o cadastro bem-sucedido, redirecione para a tela de login
+          alert('Cadastro realizado do com sucesso!')
+          navigate('/entrar');
+        })
+        .catch(err => console.log(err));
+    }
 
 // function cadastrar() {
 //   if (!email || !senha) {
@@ -302,11 +311,11 @@ function Criar() {
                       fontWeight: "bold",
                     }}
                   >
-                    Cadastrar depois
+                    <a href="cardapio">Cadastrar depois</a>{"/cardapio"}
                   </Button>
                   <div className="d-flex justify-content-center">
                     <p>
-                      Já tem uma conta? <a href="">Acesse aqui</a>{" "}
+                      Já tem uma conta? <a href="entrar">Acesse aqui</a>{"/entrar"}
                     </p>
                   </div>
                 </Card.Body>

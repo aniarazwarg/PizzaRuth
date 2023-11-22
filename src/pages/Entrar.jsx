@@ -14,13 +14,14 @@ import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
 import { Form, FormLabel, InputGroup } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Entrar() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState(null);
 
-  // const history = useHistory(); // React Router hook para manipulação de histórico
+  const navigate = useNavigate();
 
   function handleLogin() {
     const data = {
@@ -36,21 +37,35 @@ function Entrar() {
           "Accept": "application/json",
       },
   })
-.then(response => response.text())
-.then(text => {
-    console.log(text); // Exibir a resposta do servidor no console
+  .then(response => response.text())
+  .then(text => {
+    console.log('Resposta completa da API:', text);
+    text = text.trim();
+    console.log('Resposta da API (após limpeza):', text);
+    
     try {
-        const json = JSON.parse(text); // Tentar analisar o JSON
-        console.log(json);
-    } catch (error) {
-        console.error('Erro ao analisar JSON:', error);
-    }
-})
-.catch(error => {
-    console.error('Erro durante a requisição:', error);
-});
-  }
+      const json = JSON.parse(text); // Tentar analisar o JSON
 
+      if (json.message === 'Login bem-sucedido') {
+        // Se o login for bem-sucedido, envie os dados diretamente para o UserProfile
+        setUserProfileData(json.user);
+
+        // Redirecione para a tela do cardápio
+        navigate('/cardapio');
+      } else {
+        // Trate o caso em que o login não foi bem-sucedido
+        alert('Erro ao fazer login');
+      }
+    } catch (error) {
+      console.error('Erro ao analisar JSON:', error);
+      alert('Erro ao fazer login');
+    }
+  })
+  .catch(error => {
+    console.error('Erro durante a requisição:', error);
+    alert('Erro ao fazer login');
+  });
+}
   return (
     <div>
       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
@@ -170,7 +185,7 @@ function Entrar() {
                   <Button  onClick={handleLogin}
                     style={{
                       width: "100%",
-                      backgroundColor: "#D3D3D3",
+                      backgroundColor: "red",
                       borderRadius: 20,
                       borderWidth: 0,
                       marginTop: 20,
@@ -180,6 +195,8 @@ function Entrar() {
                   >
                     Acessar
                   </Button>
+
+                  
                   
                   <div className="d-flex justify-content-center">
                     <p>

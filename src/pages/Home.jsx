@@ -108,24 +108,23 @@ function Home() {
                   Peça sua pizza em casa ou retire na loja mais próxima
                 </Card.Title>
                 <Card.Text>
-                  Informe seu cep para encontrarmos a Pizza Hut mais
-                  próxima de você
+                  veja as opções abaixo:
                 </Card.Text>
                 <Form onSubmit={handleSubmit}>
-                  <InputGroup className="mb-3" style={{ marginTop: 30 }}>
+                  {/* <InputGroup className="mb-3" style={{ marginTop: 30 }}>
                     <Form.Control
                       placeholder="Informe seu CEP"
                       aria-label="Example text with button addon"
                       aria-describedby="basic-addon1"
                       value={cep}
                       onChange={handleChange}
-                    />
+                    /> */}
                     <Button variant="dark outline">
                       <Link style={{ color: 'white' }} to={{ pathname: '/Cardapio', state: { data: dataToSend } }}>
-                        Buscar
+                        Cardapio
                       </Link>
                     </Button>
-                  </InputGroup>
+                  {/* </InputGroup> */}
                 </Form>
               </Card.Body>
             </Card>
