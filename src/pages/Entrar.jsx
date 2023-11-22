@@ -13,8 +13,51 @@ import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
 import { Form, FormLabel, InputGroup } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
 function Entrar() {
+
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  // const [funcaoUsuario, setFuncaoUsuario] = useState("");
+
+
+  function handleLogin() {
+    try {
+      fetch("http://localhost/api/login", { 
+        method: "POST",
+        body: JSON.stringify({ 
+          email:email, 
+          senha:senha,
+         }),     
+
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+       
+      })
+
+
+      if (response => response.ok) {
+        const userData = response => response.json();
+        console.log("Usuário logado com sucesso:", userData);
+      
+        // // Atualiza o estado com a função do usuário
+        // setFuncaoUsuario(userData.user.funcao);
+      
+        // // Redireciona para a página /cardapio
+        // history.push("/cardapio");
+      } else {
+        console.error("Erro ao fazer login:", response.statusText);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+ 
+
   return (
     <div>
       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
@@ -128,7 +171,7 @@ function Entrar() {
                       ></Form.Control>
                     </Form.Group> */}
                   </Form>
-                  <Button
+                  <Button onClick={() => handleLogin()}
                     style={{
                       width: "100%",
                       backgroundColor: "#D3D3D3",

@@ -107,25 +107,25 @@ function Criar() {
     .catch(err => console.log(err));
 }
 
-function cadastrar() {
-  if (!email || !senha) {
-      return alert("Preencha todos os campos");
-  } else {
-      const requestBody = {
-        email:email,
-        senha:senha,
-        funcao: Funcao,
-        logradouro:logradouro,
-        numero:numero,
-        bairro:bairro,
-        cidade:cidade,
-        estado:estado,   
-      };
+// function cadastrar() {
+//   if (!email || !senha) {
+//       return alert("Preencha todos os campos");
+//   } else {
+//       const requestBody = {
+//         email:email,
+//         senha:senha,
+//         funcao: Funcao,
+//         logradouro:logradouro,
+//         numero:numero,
+//         bairro:bairro,
+//         cidade:cidade,
+//         estado:estado,   
+//       };
 
-      criar(); // Remova o argumento aqui
-      return alert("Cadastro realizado com sucesso!");
-  }
-}
+//       criar(); // Remova o argumento aqui
+//       return alert("Cadastro realizado com sucesso!");
+//   }
+// }
   useEffect(() => {
   }, []);
 
