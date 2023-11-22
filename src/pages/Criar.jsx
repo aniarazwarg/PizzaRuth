@@ -14,7 +14,7 @@ import Pizza from "../assets/pizza.jpg";
 function Criar() {
   const [senha, setSenha] = useState('');
   const [email, setEmail] = useState('');
-  const [Funcao, setFuncao] = useState('');
+  const [funcao, setfuncao] = useState('');
   const [endereco, setEndereco] = useState({
   });
   const [logradouro,setLogradouro] = useState('');
@@ -42,9 +42,9 @@ function Criar() {
     setSenha(newSenha);
   };
 
-  const handleFuncaoChange = (e) => {
-    const newFuncao = e.target.value;
-    setFuncao(newFuncao);
+  const handlefuncaoChange = (e) => {
+    const newfuncao = e.target.value;
+    setfuncao(newfuncao);
   };
 
   const handleLogradouroChange = (e) => {
@@ -86,23 +86,28 @@ function Criar() {
       .catch((error) => console.error("Erro ao obter dados do CEP:", error));
   }
   function criar() {
-    fetch('http://localhost/api/cadastrar',{
+    fetch('http://localhost/api/cadastrar', {
         method: 'POST',
         body: JSON.stringify({
-            email:email,
-            senha:senha,
-            funcao: Funcao,
-            logradouro:logradouro,
-            numero:numero,
-            bairro:bairro,
-            cidade:cidade,
-            estado:estado,     
+            email: email,
+            senha: senha,
+            funcao:funcao,
+            logradouro: logradouro,
+            numero: numero,
+            bairro: bairro,
+            cidade: cidade,
+            estado: estado,
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Accept": "application/json", // Adicione este header
         },
     })
-    .then(response => response.json()) 
+    .then(response => response.text())
+    .then(text => {
+        console.log(text); // Exibir a resposta do servidor no console
+        return JSON.parse(text); // Tentar analisar o JSON
+    })
     .then(json => console.log(json))
     .catch(err => console.log(err));
 }
@@ -114,7 +119,7 @@ function Criar() {
 //       const requestBody = {
 //         email:email,
 //         senha:senha,
-//         funcao: Funcao,
+//         funcao: funcao,
 //         logradouro:logradouro,
 //         numero:numero,
 //         bairro:bairro,
@@ -264,7 +269,7 @@ function Criar() {
 </Form.Group>
                     <Form.Group className="mb-3" controlId="Função de Usuário">
         <Form.Label>Função de Usuário</Form.Label>
-        <Form.Control as="select" onChange={handleFuncaoChange} value={Funcao}>
+        <Form.Control as="select" onChange={handlefuncaoChange} value={funcao}>
           <option value="">Selecione a Função de Usuário</option>
           <option value="cliente">Cliente</option>
           <option value="admin">Funcionário</option>

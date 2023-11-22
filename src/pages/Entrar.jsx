@@ -16,44 +16,40 @@ import { Form, FormLabel, InputGroup } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 function Entrar() {
-
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  // const [funcaoUsuario, setFuncaoUsuario] = useState("");
+  const [error, setError] = useState(null);
+
+  // const history = useHistory(); // React Router hook para manipulação de histórico
 
   function handleLogin() {
+    const data = {
+      email: email,
+      senha: senha,
+    };
+  
+    fetch('http://localhost/api/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
+      },
+  })
+.then(response => response.text())
+.then(text => {
+    console.log(text); // Exibir a resposta do servidor no console
     try {
-        fetch("http://localhost/api/login", {
-            method: "POST",
-            body: JSON.stringify({ email, senha }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na requisição');
-            }
-            return response.json();
-        })
-        .then(userData => {
-            console.log("Usuário logado com sucesso:", userData);
-            href = "/cardapio";
-
-            // Atualiza o estado com a função do usuário
-            // setFuncaoUsuario(userData.user.funcao);
-
-           
-        })
-        .catch(error => {
-            console.error("Erro ao fazer login:", error);
-        });
+        const json = JSON.parse(text); // Tentar analisar o JSON
+        console.log(json);
     } catch (error) {
-        console.error(error);
+        console.error('Erro ao analisar JSON:', error);
     }
-}
-
- 
+})
+.catch(error => {
+    console.error('Erro durante a requisição:', error);
+});
+  }
 
   return (
     <div>
