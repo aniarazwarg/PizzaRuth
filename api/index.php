@@ -46,6 +46,8 @@ $app->put('/alterar/{id}', 'getAlterar');
 $app->get('/comentarios', 'getComentarios');
 $app->put('/curtidas/{id}', 'getCurtidas');
 $app->post('/login','getLogin');
+$app->get('/login','getLogin');
+$app->get('/usuario-autenticado', 'getUsuarioAutenticado');
 
 
 
@@ -88,6 +90,21 @@ function getLogin(Request $request, Response $response, array $args)
     } catch (Exception $e) {
         return $response->withJson(['error' => $e->getMessage()], 400);
     }
+}
+
+function getUsuarioAutenticado(Request $request, Response $response, array $args)
+{
+    // Verifique se o usuário está autenticado, por exemplo, usando algum middleware ou verificação de token JWT
+
+    // Se o usuário estiver autenticado, obtenha os dados do usuário
+    $userData = [
+        'cd_cliente' => $request->getAttribute('cd_cliente'),
+        'email' => $request->getAttribute('email'),
+        'funcao' => $request->getAttribute('funcao'),
+        // Adicione outros dados do usuário que você deseja retornar
+    ];
+
+    return $response->withJson(['user' => $userData]);
 }
 
 
