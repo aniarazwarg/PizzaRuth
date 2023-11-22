@@ -56,40 +56,57 @@ function getConn()
         array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
     );
 }
+function getLogin(Request $request, Response $response, array $args) {
+    try {
+        $data = $request->getParsedBody();
 
-//-------------------------------LOGIN
-function getLogin(){
+        // Consulta SQL
+        $conn = getConn();
+        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
+        $stmt->bindParam(":email", $data["email"]);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        // Verifica se a senha está correta
+        if (password_verify($data["senha"], $user["senha"])) {
+            // Senha correta
+            $userData = [
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'funcao' => $user['funcao'],
+            ];
+
+            return $response->withJson(['message' => 'Login bem-sucedido', 'user' => $userData]);
+        } else {
+            // Senha incorreta
+            return $response->withJson(['error' => 'Senha incorreta']);
+        }
+    } catch (PDOException $e) {
+        return $response->withJson(['error' => 'Erro ao fazer login: ' . $e->getMessage()], 500);
+    }
+}
+
+function getProdutos(Request $request, Response $response, array $args)
+{
+    $sql = "SELECT * FROM Produto";
+    $stmt = getConn()->query($sql);
+    $produtos = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $response->getBody()->write(json_encode($produtos));
+    return $response;
+}
+
+function getProduto(Request $request, Response $response, array $args)
+{
+    $id = $args['id'];
     $conn = getConn();
-
-    // Verifica se o usuário com o email especificado existe
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE email = :email");
-    $stmt->bindParam(":email", $_POST["email"]);
+    $sql = "SELECT * FROM produto WHERE ID=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam("id", $id);
     $stmt->execute();
-    $userCount = $stmt->fetchColumn();
+    $produto = $stmt->fetchObject();
 
-    if ($userCount == 0) {
-        // O usuário não existe
-        echo json_encode(['error' => 'Usuário não encontrado']);
-        return;
-    }
-
-    // Consulta SQL para verificar a senha
-    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
-    $stmt->bindParam(":email", $_POST["email"]);
-    $stmt->execute();
-    $user = $stmt->fetch();
-
-    // Verifica se a senha está correta
-    if ($_POST["senha"]== $user["senha"]) {
-        // Senha correta
-        $response = [
-            'message' => 'Login bem-sucedido',
-        ];
-        echo json_encode($response);
-    } else {
-        // Senha incorreta
-        echo json_encode(['error' => 'Senha incorreta']);
-    }
+    $response->getBody()->write(json_encode($produto));
+    return $response;
 }
 
 function getPizza(Request $request, Response $response, array $args)
@@ -101,7 +118,38 @@ function getPizza(Request $request, Response $response, array $args)
     return $response;
 }
 
-//-----------------------CADASTRO USUARIO
+function getUsuario(Request $request, Response $response, array $args)
+{
+    $sql = "SELECT * FROM usuarios";
+    $stmt = getConn()->query($sql);
+    $usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $response->getBody()->write(json_encode($usuarios));
+    return $response;
+}
+
+function getInserir(Request $request, Response $response, array $args)
+{
+    $data = $request->getParsedBody(); // Obtenha os dados enviados na solicitação POST
+
+    // Conecte-se ao banco de dados usando PDO ou outro método de sua escolha
+    $db = new PDO(
+        'mysql:host=localhost:3306;dbname=slimprodutos',
+        'root',
+        ''
+    );
+
+    // Execute a inserção no banco de dados
+    $stmt = $db->prepare('INSERT INTO produto (NOME) VALUES (:valor1)');
+    $stmt->bindParam(':valor1', $data['valor1']);
+
+    if ($stmt->execute()) {
+        return $response->withJson(['message' => 'Dados inseridos com sucesso']);
+    } else {
+        return $response->withJson(['error' => 'Erro ao inserir dados'], 500);
+    }
+}
+;
+
 function getCadastrar(Request $request, Response $response, array $args)
 {
     try {
@@ -115,13 +163,13 @@ function getCadastrar(Request $request, Response $response, array $args)
         $conn = getConn();
 
         // Hash da senha
-        // $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
+        $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
 
         // Inserir dados no banco de dados
         $stmt = $conn->prepare('INSERT INTO usuarios (email, senha, funcao, logradouro, numero, bairro, cidade, estado) 
                                 VALUES (:email, :senha, :funcao, :logradouro, :numero, :bairro, :cidade, :estado)');
         $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':senha', $data['senha']);
+        $stmt->bindParam(':senha', $hashedPassword);
         $stmt->bindParam(':funcao', $data['funcao']);
         $stmt->bindParam(':logradouro', $data['logradouro']);
         $stmt->bindParam(':numero', $data['numero']);
@@ -138,8 +186,6 @@ function getCadastrar(Request $request, Response $response, array $args)
         return $response->withJson(['error' => $e->getMessage()], 400);
     }
 }
-
-//-----------------------Cadastro produto
 
 function getcadastrarPizza(Request $request, Response $response, array $args)
 {
@@ -183,8 +229,6 @@ function getcadastrarPizza(Request $request, Response $response, array $args)
     }
 }
 
-
-
 function getEntradinhas(Request $request, Response $response, array $args)
 {
     $sql = "SELECT * FROM pizzas WHERE categoria = 'entradinhas'";
@@ -204,155 +248,76 @@ function getSobremesas(Request $request, Response $response, array $args)
 }
 
 
-// function getFuncaoCliente(Request $request, Response $response, array $args)
-// {
-//     $sql = "SELECT * FROM usuario WHERE funcao = 'cliente'";
-//     $stmt = getConn()->query($sql);
-//     $entradinhas = $stmt->fetchAll(PDO::FETCH_OBJ);
-//     $response->getBody()->write(json_encode($entradinhas));
-//     return $response;
-// }
+function getDeletar(Request $request, Response $response, array $args)
+{
 
-// function getFuncaoFuncionario(Request $request, Response $response, array $args)
-// {
-//     $sql = "SELECT * FROM usuario WHERE funcao = 'funcionario'";
-//     $stmt = getConn()->query($sql);
-//     $funcaoUsuario = $stmt->fetchAll(PDO::FETCH_OBJ);
-//     $response->getBody()->write(json_encode($funcaoUsuario));
-//     return $response;
-// }
+    $db = new PDO(
+        'mysql:host=localhost:3306;dbname=slimprodutos',
+        'root',
+        ''
+    );
+    $id = $args['id'];
+    $sql = "DELETE FROM produto WHERE ID = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
 
-
-// function getUsuario(Request $request, Response $response, array $args)
-// {
-//     $sql = "SELECT * FROM usuarios";
-//     $stmt = getConn()->query($sql);
-//     $usuarios = $stmt->fetchAll(PDO::FETCH_OBJ);
-//     $response->getBody()->write(json_encode($usuarios));
-//     return $response;
-// }
-
-// function getInserir(Request $request, Response $response, array $args)
-// {
-//     $data = $request->getParsedBody(); // Obtenha os dados enviados na solicitação POST
-
-//     // Conecte-se ao banco de dados usando PDO ou outro método de sua escolha
-//     $db = new PDO(
-//         'mysql:host=localhost:3306;dbname=slimprodutos',
-//         'root',
-//         ''
-//     );
-
-//     // Execute a inserção no banco de dados
-//     $stmt = $db->prepare('INSERT INTO produto (NOME) VALUES (:valor1)');
-//     $stmt->bindParam(':valor1', $data['valor1']);
-
-//     if ($stmt->execute()) {
-//         return $response->withJson(['message' => 'Dados inseridos com sucesso']);
-//     } else {
-//         return $response->withJson(['error' => 'Erro ao inserir dados'], 500);
-//     }
-// }
-// ;
-
-
-// function getDeletar(Request $request, Response $response, array $args)
-// {
-
-//     $db = new PDO(
-//         'mysql:host=localhost:3306;dbname=slimprodutos',
-//         'root',
-//         ''
-//     );
-//     $id = $args['id'];
-//     $sql = "DELETE FROM produto WHERE ID = :id";
-//     $stmt = $db->prepare($sql);
-//     $stmt->bindParam(':id', $id);
-//     $stmt->execute();
-
-//     return $response->withStatus(200)->withJson(['message' => 'Registro excluído com sucesso']);
-// }
-// ;
-
-// function getAlterar(Request $request, Response $response, array $args)
-// {
-
-//     $db = new PDO(
-//         'mysql:host=localhost:3306;dbname=slimprodutos',
-//         'root',
-//         ''
-//     );
-//     $id = $args['id'];
-//     $newData = $request->getParsedBody(); // Dados de atualização
-//     $sql = "UPDATE produto SET NOME = :nome WHERE id = :id";
-//     $stmt = $db->prepare($sql);
-//     $stmt->bindParam(':id', $id);
-//     $stmt->bindParam(':nome', $newData['nome']);
-//     $stmt->execute();
-
-//     return $response->withStatus(200)->withJson(['message' => 'Registro atualizado com sucesso']);
-
-// }
-// ;
-
-// function getComentarios(Request $request, Response $response, array $args)
-// {
-//     $sql = "SELECT * FROM Comentarios";
-//     $stmt = getConn()->query($sql);
-//     $comentarios = $stmt->fetchAll(PDO::FETCH_OBJ);
-//     $response->getBody()->write(json_encode($comentarios));
-//     return $response;
-// }
-
-// function getCurtidas(Request $request, Response $response, array $args)
-// {
-
-//     $db = new PDO(
-//         'mysql:host=localhost:3306;dbname=slimprodutos',
-//         'root',
-//         ''
-//     );
-//     $id = $args['id'];
-//     $newData = $request->getParsedBody(); // Dados de atualização
-//     $sql = "UPDATE comentarios SET curtidas = :curtidas, descurtidas = :descurtidas, ok = :ok WHERE id = :id";
-//     $stmt = $db->prepare($sql);
-//     $stmt->bindParam(':id', $id);
-//     $stmt->bindParam(':curtidas', $newData['curtidas']);
-//     $stmt->bindParam(':descurtidas', $newData['descurtidas']);
-//     $stmt->bindParam(':ok', $newData['ok']);
-//     $stmt->execute();
-
-//     return $response->withStatus(200)->withJson(['message' => 'Registro atualizado com sucesso']);
-
-// }
-
-
-
-// function getProdutos(Request $request, Response $response, array $args)
-// {
-//     $sql = "SELECT * FROM Produto";
-//     $stmt = getConn()->query($sql);
-//     $produtos = $stmt->fetchAll(PDO::FETCH_OBJ);
-//     $response->getBody()->write(json_encode($produtos));
-//     return $response;
-// }
-
-// function getProduto(Request $request, Response $response, array $args)
-// {
-//     $id = $args['id'];
-//     $conn = getConn();
-//     $sql = "SELECT * FROM produto WHERE ID=:id";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bindParam("id", $id);
-//     $stmt->execute();
-//     $produto = $stmt->fetchObject();
-
-//     $response->getBody()->write(json_encode($produto));
-//     return $response;
-// }
+    return $response->withStatus(200)->withJson(['message' => 'Registro excluído com sucesso']);
+}
 ;
 
+function getAlterar(Request $request, Response $response, array $args)
+{
 
+    $db = new PDO(
+        'mysql:host=localhost:3306;dbname=slimprodutos',
+        'root',
+        ''
+    );
+    $id = $args['id'];
+    $newData = $request->getParsedBody(); // Dados de atualização
+    $sql = "UPDATE produto SET NOME = :nome WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':nome', $newData['nome']);
+    $stmt->execute();
+
+    return $response->withStatus(200)->withJson(['message' => 'Registro atualizado com sucesso']);
+
+}
+;
+
+function getComentarios(Request $request, Response $response, array $args)
+{
+    $sql = "SELECT * FROM Comentarios";
+    $stmt = getConn()->query($sql);
+    $comentarios = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $response->getBody()->write(json_encode($comentarios));
+    return $response;
+}
+
+function getCurtidas(Request $request, Response $response, array $args)
+{
+
+    $db = new PDO(
+        'mysql:host=localhost:3306;dbname=slimprodutos',
+        'root',
+        ''
+    );
+    $id = $args['id'];
+    $newData = $request->getParsedBody(); // Dados de atualização
+    $sql = "UPDATE comentarios SET curtidas = :curtidas, descurtidas = :descurtidas, ok = :ok WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':curtidas', $newData['curtidas']);
+    $stmt->bindParam(':descurtidas', $newData['descurtidas']);
+    $stmt->bindParam(':ok', $newData['ok']);
+    $stmt->execute();
+
+    return $response->withStatus(200)->withJson(['message' => 'Registro atualizado com sucesso']);
+
+}
+;
 
 
 $app->run();

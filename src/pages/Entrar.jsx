@@ -21,40 +21,37 @@ function Entrar() {
   const [senha, setSenha] = useState("");
   // const [funcaoUsuario, setFuncaoUsuario] = useState("");
 
-
   function handleLogin() {
     try {
-      fetch("http://localhost/api/login", { 
-        method: "POST",
-        body: JSON.stringify({ 
-          email:email, 
-          senha:senha,
-         }),     
+        fetch("http://localhost/api/login", {
+            method: "POST",
+            body: JSON.stringify({ email, senha }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+            return response.json();
+        })
+        .then(userData => {
+            console.log("Usuário logado com sucesso:", userData);
+            href = "/cardapio";
 
+            // Atualiza o estado com a função do usuário
+            // setFuncaoUsuario(userData.user.funcao);
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-       
-      })
-
-
-      if (response => response.ok) {
-        const userData = response => response.json();
-        console.log("Usuário logado com sucesso:", userData);
-      
-        // // Atualiza o estado com a função do usuário
-        // setFuncaoUsuario(userData.user.funcao);
-      
-        // // Redireciona para a página /cardapio
-        // history.push("/cardapio");
-      } else {
-        console.error("Erro ao fazer login:", response.statusText);
-      }
+           
+        })
+        .catch(error => {
+            console.error("Erro ao fazer login:", error);
+        });
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+}
 
  
 
@@ -141,7 +138,8 @@ function Entrar() {
                           borderRadius: 20,
                           borderColor: "black",
                           padding: 10,
-                        }}
+                        }}value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       ></Form.Control>
                     </Form.Group>
                     <Form.Group>
@@ -154,7 +152,9 @@ function Entrar() {
                           borderRadius: 20,
                           borderColor: "black",
                           padding: 10,
-                        }}
+                        }}value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                      
                       ></Form.Control>
                     </Form.Group>
                     {/* <Form.Group>
@@ -171,7 +171,7 @@ function Entrar() {
                       ></Form.Control>
                     </Form.Group> */}
                   </Form>
-                  <Button onClick={() => handleLogin()}
+                  <Button  onClick={handleLogin}
                     style={{
                       width: "100%",
                       backgroundColor: "#D3D3D3",
