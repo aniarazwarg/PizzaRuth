@@ -9,12 +9,15 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
+import { useNavigate } from 'react-router-dom';
 
 
 function Criar() {
+  const navigate = useNavigate();
+
   const [senha, setSenha] = useState('');
   const [email, setEmail] = useState('');
-  const [Funcao, setFuncao] = useState('');
+  const [funcao, setfuncao] = useState('');
   const [endereco, setEndereco] = useState({
   });
   const [logradouro,setLogradouro] = useState('');
@@ -42,9 +45,9 @@ function Criar() {
     setSenha(newSenha);
   };
 
-  const handleFuncaoChange = (e) => {
-    const newFuncao = e.target.value;
-    setFuncao(newFuncao);
+  const handlefuncaoChange = (e) => {
+    const newfuncao = e.target.value;
+    setfuncao(newfuncao);
   };
 
   const handleLogradouroChange = (e) => {
@@ -86,46 +89,57 @@ function Criar() {
       .catch((error) => console.error("Erro ao obter dados do CEP:", error));
   }
   function criar() {
-    fetch('http://localhost/api/cadastrar',{
+    fetch('http://localhost/api/cadastrar', {
         method: 'POST',
         body: JSON.stringify({
-            email:email,
-            senha:senha,
-            funcao: Funcao,
-            logradouro:logradouro,
-            numero:numero,
-            bairro:bairro,
-            cidade:cidade,
-            estado:estado,     
+            email: email,
+            senha: senha,
+            funcao:funcao,
+            logradouro: logradouro,
+            numero: numero,
+            bairro: bairro,
+            cidade: cidade,
+            estado: estado,
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+          "Content-type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
         },
-    })
-    .then(response => response.json()) 
-    .then(json => console.log(json))
-    .catch(err => console.log(err));
-}
+      })
+        .then(response => response.text())
+        .then(text => {
+          console.log(text); // Exibir a resposta do servidor no console
+          return JSON.parse(text); // Tentar analisar o JSON
+        })
+        .then(json => {
+          console.log(json);
+  
+          // Após o cadastro bem-sucedido, redirecione para a tela de login
+          alert('Cadastro realizado do com sucesso!')
+          navigate('/entrar');
+        })
+        .catch(err => console.log(err));
+    }
 
-function cadastrar() {
-  if (!email || !senha) {
-      return alert("Preencha todos os campos");
-  } else {
-      const requestBody = {
-        email:email,
-        senha:senha,
-        funcao: Funcao,
-        logradouro:logradouro,
-        numero:numero,
-        bairro:bairro,
-        cidade:cidade,
-        estado:estado,   
-      };
+// function cadastrar() {
+//   if (!email || !senha) {
+//       return alert("Preencha todos os campos");
+//   } else {
+//       const requestBody = {
+//         email:email,
+//         senha:senha,
+//         funcao: funcao,
+//         logradouro:logradouro,
+//         numero:numero,
+//         bairro:bairro,
+//         cidade:cidade,
+//         estado:estado,   
+//       };
 
-      criar(); // Remova o argumento aqui
-      return alert("Cadastro realizado com sucesso!");
-  }
-}
+//       criar(); // Remova o argumento aqui
+//       return alert("Cadastro realizado com sucesso!");
+//   }
+// }
   useEffect(() => {
   }, []);
 
@@ -264,7 +278,7 @@ function cadastrar() {
 </Form.Group>
                     <Form.Group className="mb-3" controlId="Função de Usuário">
         <Form.Label>Função de Usuário</Form.Label>
-        <Form.Control as="select" onChange={handleFuncaoChange} value={Funcao}>
+        <Form.Control as="select" onChange={handlefuncaoChange} value={funcao}>
           <option value="">Selecione a Função de Usuário</option>
           <option value="cliente">Cliente</option>
           <option value="admin">Funcionário</option>
@@ -297,11 +311,11 @@ function cadastrar() {
                       fontWeight: "bold",
                     }}
                   >
-                    Cadastrar depois
+                    <a href="cardapio">Cadastrar depois</a>{"/cardapio"}
                   </Button>
                   <div className="d-flex justify-content-center">
                     <p>
-                      Já tem uma conta? <a href="">Acesse aqui</a>{" "}
+                      Já tem uma conta? <a href="entrar">Acesse aqui</a>{"/entrar"}
                     </p>
                   </div>
                 </Card.Body>

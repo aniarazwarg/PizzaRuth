@@ -3,6 +3,7 @@ import Menu from "./Menu";
 import CardPizzas from "../components/cardPizzas";
 import CardEntradinhas from "../components/cardEntradinhas";
 import CardSobremesas from "../components/cardSobremesas";
+import UserProfile from '../components/userProfile';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pizza from "../assets/pizza.jpg";
 import Logo from "../assets/logo_ruth2.png";
@@ -15,13 +16,30 @@ import ios from "../assets/ios.png"
 import play from "../assets/play.png"
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Cardapio() {
+  const location = useLocation();
+  const [user, setUser] = useState(null);
+
+  // useEffect para buscar os dados do usuário quando o componente é montado
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost/api/login');
+        const userData = await response.json();
+        console.log('Dados do usuário após a chamada da API:', userData);
+        setUser(userData);
+      } catch (error) {
+        console.error('Erro ao obter dados do usuário', error);
+      }
+    };
   
-  const [funcaoUsuario, setFuncaoUsuario] = useState("");
-  const [usuarios, setUsuarios] = useState("");
+    fetchUserData();
+  }, []);
+
 
 
   useEffect(() => {
@@ -72,41 +90,28 @@ function Cardapio() {
         }}
       >
         <Container>
-          <Row>
-            <Col
-              md={4}
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                marginLeft: 100,
-                marginTop: 30,
-              }}
-            >
-              <p>
-                <a style={{ color: "red" }} href="/">
-                  {" "}
-                  Voltar para a Home
-                </a>
-                {""}
-              </p>
-            </Col>
-            <Col md={6}>
-              <Image src={Logo} rounded style={{ padding: 10, width: 700 }} />
-            </Col>
-          </Row>
-
-          {/* Novo bloco de Row para os botões condicionais */}
-          <Row>
-            {/* {funcaoUsuario === "cliente" && (
-              <Button variant="primary">Carrinho de Compras</Button>
-            )}
-            {funcaoUsuario === "funcionario" && (
-              <Button variant="success">Cadastrar Produto</Button>
-            )} */}
-          </Row>
+          <Navbar.Brand href="/Cardapio">
+            <Image src={Logo} />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link style={{ color: "red" }} href="/">
+                Início
+              </Nav.Link>
+              {/* <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
+              <Nav.Link href="#link">Administrador</Nav.Link> */}
+              
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
       <Container style={{ width: "70%", marginTop: 40 }}>
+
+      <Row style={{ marginTop: 20 }}>
+    <UserProfile user={user} />
+  </Row>
+
         <Image style={{ width: "100%" }} src={tartaruga} />
         <Container style={{ flexDirection: "row" }}>
           <Row style={{ display: "flex", justifyItems: 'center', justifyContent: 'space-between', alignItems: 'center', marginTop: 30 }}>

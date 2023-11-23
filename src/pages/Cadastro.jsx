@@ -35,7 +35,7 @@ function Cadastro() {
                 const response = await axios.post('http://localhost/api/cadastrarPizza', formData);
         
                 console.log(response.data);
-                alert('Produto cadastrada com sucesso!');
+                alert('Produto cadastrado com sucesso!');
             } catch (error) {
                 console.error('Erro ao cadastrar produto:', error.response || error);
                 alert('Erro ao cadastrar produto');
@@ -48,7 +48,7 @@ function Cadastro() {
                 alert("Preencha todos os campos obrigatórios");
             } else {
                 await handleCadastro();
-                // alert("Cadastro da pizza realizado com sucesso!");
+                // alert("Cadastro do Produto realizado com sucesso!");
             }
         };
     
@@ -107,25 +107,25 @@ function Cadastro() {
                   }}
                 >
                   <Card.Title style={{ width: "55%" }}>
-                    Cadastrar nova Pizza!
+                    Cadastrar novo Produto!
                   </Card.Title>
                   {/* <Card.Text>Boa, vamos começar!</Card.Text> */}
                   <Form encType="multipart/form-data" onSubmit={handleCadastrar}>
                             <Form.Group className="mb-3" controlId="sabor">
-                                <Form.Label>Nome da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite o nome da pizza" onChange={handlesaborChange} />
+                                <Form.Label>Nome do Produto</Form.Label>
+                                <Form.Control type="text" placeholder="Digite o nome do Produto" onChange={handlesaborChange} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="descricao">
-                                <Form.Label>Descrição da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite a descrição da pizza" onChange={handledescricaoChange} />
+                                <Form.Label>Descrição do Produto</Form.Label>
+                                <Form.Control type="text" placeholder="Digite a descrição do Produto" onChange={handledescricaoChange} />
                                 <Form.Group className="mb-3" controlId="imagem">
-                                <Form.Label>Foto da Pizza</Form.Label>
+                                <Form.Label>Foto do Produto</Form.Label>
                                 <Form.Control type="file" onChange={handleimagemFileChange} />
                             </Form.Group>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="preco">
-                                <Form.Label>Valor da Pizza</Form.Label>
-                                <Form.Control type="text" placeholder="Digite o valor da pizza" onChange={handleprecoChange} />
+                                <Form.Label>Valor do Produto</Form.Label>
+                                <Form.Control type="text" placeholder="Digite o valor do Produto" onChange={handleprecoChange} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="categoria">
         <Form.Label>Categoria</Form.Label>

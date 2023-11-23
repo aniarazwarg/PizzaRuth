@@ -13,8 +13,7 @@ import Usuario from "./pages/Usuario";
 import CEPForm from "./pages/searchCep";
 import Produtos from "./pages/Produtos";
 import Cadastro from "./pages/Cadastro";
-// import CadastroPizzas from "./pages/CadastroPizzas";
-// import Login from "./pages/Login";
+
 
 function App() {
 
@@ -32,7 +31,7 @@ function App() {
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
           <Route path="/Cadastro" element={<Cadastro/>}/>
-          
+          <Route path="/cardapio" element={<Cardapio/>} />
         </Routes>
       </BrowserRouter>
     </div>

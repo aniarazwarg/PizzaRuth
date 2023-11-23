@@ -13,43 +13,60 @@ import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
 import Pizza from "../assets/pizza.jpg";
 import { Form, FormLabel, InputGroup } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 function Entrar() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [funcaoUsuario, setFuncaoUsuario] = useState("");
-  const history = useHistory();
+  const [error, setError] = useState(null);
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch("http://localhost/api/login", { 
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, senha }),
-      });
+  const navigate = useNavigate();
+
+  function handleLogin() {
+    const data = {
+      email: email,
+      senha: senha,
+    };
   
-      if (response.ok) {
-        const userData = await response.json();
-        console.log("Usuário logado com sucesso:", userData);
-      
-        // // Atualiza o estado com a função do usuário
-        // setFuncaoUsuario(userData.user.funcao);
-      
-        // // Redireciona para a página /cardapio
-        // history.push("/cardapio");
+    fetch('http://localhost/api/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
+      },
+  })
+  .then(response => response.text())
+  .then(text => {
+    console.log('Resposta completa da API:', text);
+    text = text.trim();
+    console.log('Resposta da API (após limpeza):', text);
+    
+    try {
+      const json = JSON.parse(text); // Tentar analisar o JSON
+
+      if (json.message === 'Login bem-sucedido') {
+        // Se o login for bem-sucedido, envie os dados diretamente para o UserProfile
+        //setUserProfileData(json.user);
+        
+
+        // Redirecione para a tela do cardápio
+        navigate('/cardapio');
       } else {
-        console.error("Erro ao fazer login:", response.statusText);
+        // Trate o caso em que o login não foi bem-sucedido
+        alert('Erro ao fazer login');
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error.message);
+      console.error('Erro ao analisar JSON:', error);
+      alert('Erro ao fazer login');
     }
-  };
+  })
+  .catch(error => {
+    console.error('Erro durante a requisição:', error);
+    alert('Erro ao fazer login');
+  });
+}
   return (
     <div>
       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
@@ -75,6 +92,7 @@ function Entrar() {
                     <p >
                        <a style={{color:"red"}} href="/"> Voltar para a Home</a>{""}
                     </p>
+                    
                     
                 </Col>
                 <Col md={6}><Image src={Logo} rounded style={{padding:10, width:700,}}/></Col>
@@ -135,6 +153,7 @@ function Entrar() {
                           borderColor: "black",
                           padding: 10,
                         }}
+                        
                       ></Form.Control>
                     </Form.Group>
                     <Form.Group>
@@ -149,24 +168,26 @@ function Entrar() {
                           borderColor: "black",
                           padding: 10,
                         }}
+                      
                       ></Form.Control>
                     </Form.Group>
                     
                   </Form>
-                  <Button
-  style={{
-    width: "100%",
-    backgroundColor: "#D3D3D3",
-    borderRadius: 20,
-    borderWidth: 0,
-    marginTop: 20,
-    marginBottom: 20,
-    padding: 10,
-  }}
-  onClick={handleLogin}
->
-  Acessar
-</Button>
+                  <Button  onClick={handleLogin}
+                    style={{
+                      width: "100%",
+                      backgroundColor: "red",
+                      borderRadius: 20,
+                      borderWidth: 0,
+                      marginTop: 20,
+                      marginBottom:20,
+                      padding: 10,
+                    }}
+                  >
+                    Acessar
+                  </Button>
+
+                  
                   
                   <div className="d-flex justify-content-center">
                     <p>
