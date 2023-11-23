@@ -48,7 +48,8 @@ function Entrar() {
 
       if (json.message === 'Login bem-sucedido') {
         // Se o login for bem-sucedido, envie os dados diretamente para o UserProfile
-        setUserProfileData(json.user);
+        //setUserProfileData(json.user);
+        
 
         // Redirecione para a tela do cardápio
         navigate('/cardapio');
@@ -91,6 +92,7 @@ function Entrar() {
                     <p >
                        <a style={{color:"red"}} href="/"> Voltar para a Home</a>{""}
                     </p>
+                    
                     
                 </Col>
                 <Col md={6}><Image src={Logo} rounded style={{padding:10, width:700,}}/></Col>
