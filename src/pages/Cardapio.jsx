@@ -48,11 +48,11 @@ function Cardapio() {
       .then((json) => setUsuarios (json));
   }, []);
 
-  usuarios.forEach(u => {
-    if(u.funcao == "cliente") {
-      setFuncaoUsuario("cliente")
-    }
-  });
+  // usuarios.forEach(u => {
+  //   if(u.funcao == "cliente") {
+  //     setFuncaoUsuario("cliente")
+  //   }
+  // });
 
 
   // useEffect(() => {
