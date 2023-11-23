@@ -9,9 +9,9 @@ function CardPizzas() {
     const [pizzas, setPizzas] = useState([]);
 
     function data() {
-        fetch('http://localhost/api/pizza')
+        fetch('http://localhost/api/produtos')
             .then((response) => response.json())
-            .then((json) => setPizzas(json))
+            .then((json) => setPizzas(json.filter(pizza => pizza.tipo === 'pizza')));
     }
 
     useEffect(() => {
@@ -27,8 +27,8 @@ function CardPizzas() {
                     key={pizza.id}
                     style={{ width: "31%", marginRight: 20, marginBottom: 30, minHeight: 300, maxHeight: 500 }}>
                     <Card.Body style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height:'100%' }}>
-                        <Card.Title style={{ margin: 0 }}>{pizza.sabor}</Card.Title>
-                        <Card.Img src={"src/assets/" + pizza.imagem} style={{ width: '50%' }} />
+                        <Card.Title style={{ margin: 0 }}>{pizza.produto}</Card.Title>
+                        <Card.Img src={"src/assets/" + pizza.imagem} style={{ width: '50%', minWidth: 150, minHeight: 150 }} />
                         <Container>
                             <Card.Text style={{ textAlign: 'center' }}>{pizza.descricao}</Card.Text>
                         </Container>

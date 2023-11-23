@@ -1,5 +1,4 @@
 import { Navbar, Container, Image, Row, Col, Nav, Button, Form } from "react-bootstrap";
-import Menu from "./Menu";
 import CardPizzas from "../components/cardPizzas";
 import CardEntradinhas from "../components/cardEntradinhas";
 import CardSobremesas from "../components/cardSobremesas";
@@ -51,7 +50,7 @@ function Cardapio() {
                 <Nav.Link style={{ color: "red" }} href="/Home">
                   Início
                 </Nav.Link>
-                <Nav.Link href="/CadastroProdutos">Cadastrar pizzas</Nav.Link>
+                <Nav.Link href="/CadastroProdutos">Cadastrar produtos</Nav.Link>
               </Container>
               <Container className="d-flex flex-row align-items-center justify-content-center">
                 <Link className="me-1 ms-1" to={"/Login"}>

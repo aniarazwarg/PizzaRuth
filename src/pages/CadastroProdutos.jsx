@@ -77,6 +77,8 @@ function CadastroProdutos() {
                                 <option>Selecione a categoria</option>
                                 <option value="pizza">Pizza</option>
                                 <option value="bebida">Bebida</option>
+                                <option value="breadsticks">Breadsticks</option>
+                                <option value="sobremesa">Sobremesa</option>
                             </Form.Select>
                                 <Form.Text className="text-muted">
                                     {tipo}
