@@ -16,8 +16,13 @@ function Cart({ cart, removeFromCart }) {
       };
   return (
     <div>
-      <h2>Carrinho de Compras</h2>
+      
+      {/* <h2>Carrinho de Compras</h2> */}
       <ul>
+
+    
+
+
   {cart.map((pizza, index) => (
     <li key={index}>
       {pizza.sabor} - R${pizza.preco}
@@ -29,7 +34,10 @@ function Cart({ cart, removeFromCart }) {
   {console.log("Cart Data:", cart)} {/* Adicione esta linha */}
 </ul>
       <p>Total: R${getTotalPrice()}</p>
+
+
     </div>
+    
   );
 }
 
