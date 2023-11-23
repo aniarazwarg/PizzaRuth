@@ -74,38 +74,23 @@ function Cardapio() {
 
 
   return (
-    <>
-        <Navbar
-        expand="lg"
-        className="bg-body-primary-fixed-top"
-        style={{
-          justifyContent: "center",
-          height: 50,
-          position: "fixed",
-          zIndex: 1000,
-          backgroundColor: "white",
-          left: 0,
-          right: 0,
-          width: "100%",
-        }}
-      >
-        <Container>
-          <Navbar.Brand href="/Cardapio">
-            <Image src={Logo} />
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link style={{ color: "red" }} href="/">
-                Início
-              </Nav.Link>
-              {/* <Nav.Link href="/Cadastro">Cadastrar</Nav.Link>
-              <Nav.Link href="#link">Administrador</Nav.Link> */}
-              
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+    <><Navbar expand="lg" className="bg-body-tertiary">
+    <Container>
+      <Navbar.Brand href="/Cardapio">
+        <Image src={Logo} />
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <Nav.Link style={{ color: "red" }} href="/">
+            Início
+          </Nav.Link>
+          <Nav.Link href="/Cadastro">Cadastrar Produto</Nav.Link>
+          <Nav.Link href="#link"></Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Container>
+  </Navbar>
       <Container style={{ width: "70%", marginTop: 40 }}>
 
       <Row style={{ marginTop: 20 }}>
