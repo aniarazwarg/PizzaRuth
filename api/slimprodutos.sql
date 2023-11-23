@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20/11/2023 às 02:01
--- Versão do servidor: 10.4.28-MariaDB
--- Versão do PHP: 8.2.4
+-- Tempo de geração: 23/11/2023 às 21:07
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -69,7 +69,9 @@ INSERT INTO `pizzas` (`id`, `sabor`, `descricao`, `imagem`, `preco`, `categoria`
 (5, 'lingueça', 'com ovos medios', 'pepperoni.jpg', 69.00, 'pizza'),
 (6, 'Verdinha', 'mix de ervas', 'verdinha.jpg', 41.20, 'pizza'),
 (7, 'cacetinho', 'pequeno cacete bem recheado', 'breadstick.png', 18.00, 'entradinha'),
-(8, 'sorvete 5 leites', 'leite condensado, creme de leite, leite em pó, leite de vaca...', 'leitinho.png', 33.00, 'sobremesa');
+(8, 'sorvete 5 leites', 'leite condensado, creme de leite, leite em pó, leite de vaca...', 'leitinho.png', 33.00, 'sobremesa'),
+(9, 'Energia', 'Queijo Brie, mel, damasco e castanha', 'pizzabrie.jpg', 50.00, 'pizza'),
+(10, 'Ki Sabor', 'Queijo Provolone, carne seca, cebola roxa, catupiry e milho ', 'carne seca.jpg', 45.00, 'pizza');
 
 -- --------------------------------------------------------
 
@@ -141,7 +143,7 @@ CREATE TABLE `produto_categoria` (
 CREATE TABLE `usuarios` (
   `cd_cliente` int(11) NOT NULL,
   `email` varchar(30) NOT NULL,
-  `senha` varchar(30) NOT NULL,
+  `senha` varchar(2000) NOT NULL,
   `funcao` varchar(100) NOT NULL,
   `logradouro` varchar(100) NOT NULL,
   `numero` int(11) NOT NULL,
@@ -155,12 +157,15 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`cd_cliente`, `email`, `senha`, `funcao`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`) VALUES
-(1, 'lucabarata@bol.com', '123', '', '', 0, '', '', ''),
-(6, 'teste1', 'teste1', '', '', 0, '', '', ''),
-(7, 'aaa', 'aaa', '', '', 0, '', '', ''),
-(8, 'luca', 'luca123', '', '', 0, '', '', ''),
 (9, 'fvillelas.tecnico@gmail.com', '$2y$10$IETJphQtxGkNvq8GpbgibuQ', 'cliente', '', 412, '', '', ''),
-(10, 'issoeumemail@ficticio.com', '$2y$10$nH8wBd1D0v7c1LBr932tEed', 'cliente', '', 214, '', '', '');
+(10, 'issoeumemail@ficticio.com', '$2y$10$nH8wBd1D0v7c1LBr932tEed', 'cliente', '', 214, '', '', ''),
+(12, 'niah.zwarg@gmail.com', '$2y$10$7ZjsgGM/UuAiWFh6azEiF.1gXhpavX5W1yr1gIkLPCen0GG6E3PhC', 'cliente', '', 217, '', '', ''),
+(14, 'eu@eu.com', '$2y$10$EOwGib/a9z1xs6MIztQG8.APPUWtya.VSAE/Mr4lgqtjLx4R1IZj.', 'admin', '', 11, '', '', ''),
+(15, 'eu@eu.eu', '$2y$10$G83uN797nGb.2QkKTZO3lOMnJJ3Z0jA3UeWmYAPwWmWJ3GdDSD3ZK', 'cliente', '', 0, '', '', ''),
+(16, 'aaa@aa.aa', '$2y$10$gu2KCK1Jw6Wv8MFs.qkFjeG8cWD/JHAILXXjK/q318GvobaoVVyBO', 'admin', '', 0, '', '', ''),
+(17, 'oi@oi.oi', '$2y$10$CuvFot4SwKtQ6w6GdQeUY.QnX7/TtVYbg09AbZRCNq3ZO78XWKbGO', 'admin', '', 0, '', '', ''),
+(18, 'i@i.i', '$2y$10$vKh8W23tI38wvSqbzr.pR.RRuicwLxqmqw4/w/.gU4MgjAyMJ7P4K', 'cliente', '', 0, '', '', ''),
+(19, 'cli@cli.cli', '$2y$10$OiUlVNN/cex/5JlrnQ9sROV3oxojYhKrI54/zde2IE3h4.qj6X28O', 'cliente', '', 511, '', '', '');
 
 --
 -- Índices para tabelas despejadas
@@ -218,7 +223,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de tabela `pizzas`
 --
 ALTER TABLE `pizzas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
@@ -236,7 +241,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restrições para tabelas despejadas

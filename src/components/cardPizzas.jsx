@@ -1,9 +1,7 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import pepperoni from "../assets/pepperoni.jpg";
 import { useState, useEffect } from "react";
 
-
-function CardPizzas() {
+function CardPizzas({ addToCart }) {
   const [pizzas, setPizzas] = useState([]);
 
   useEffect(() => {
@@ -24,8 +22,12 @@ function CardPizzas() {
             <Card.Img src={"src/assets/" + pizza.imagem} style={{ width: '50%' }} />
             <Card.Text style={{ textAlign: 'center' }}>{pizza.descricao}</Card.Text>
             <Card.Text style={{ textAlign: 'center' }}>R${pizza.preco}</Card.Text>
-            <Button style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }} variant="outline-dark">
-              <p style={{ fontSize: '1vw', marginBottom: 0 }}>Personalizar</p>
+            <Button
+              style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}
+              variant="outline-dark"
+              onClick={() => addToCart(pizza)}
+            >
+              <p style={{ fontSize: '1vw', marginBottom: 0 }}>Adicionar ao Carrinho</p>
             </Button>
           </Card.Body>
         </Card>

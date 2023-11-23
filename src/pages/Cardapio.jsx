@@ -17,12 +17,16 @@ import play from "../assets/play.png"
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-
+// import Carrinho from "../components/carrinho";
+import Cart from "../components/carrinho";
 
 
 function Cardapio() {
   const location = useLocation();
-  const [user, setUser] = useState(null);
+
+    const [user, setUser] = useState(null);
+    const [cart, setCart] = useState([]);
+  
 
   // useEffect para buscar os dados do usuário quando o componente é montado
   useEffect(() => {
@@ -40,6 +44,16 @@ function Cardapio() {
     fetchUserData();
   }, []);
 
+ 
+
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
+
+  const removeFromCart = (itemId) => {
+    const updatedCart = cart.filter((item) => item.id !== itemId);
+    setCart(updatedCart);
+  };
 
 
   useEffect(() => {
@@ -133,11 +147,21 @@ function Cardapio() {
             <h5>🍫 Sobremesas</h5>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <CardSobremesas />
+          <CardSobremesas addToCart={addToCart} />
           </Row>
           <Row style={{ marginBottom: 30 }}>
-            <Button style={{ fontWeight: 'bold', padding: 15, borderRadius: 40 }} variant="outline-dark">Ver cardápio completo</Button>
-          </Row>
+        <Button
+          style={{ fontWeight: 'bold', padding: 15, borderRadius: 40 }}
+          variant="outline-dark"
+        >
+          Carrinho
+        </Button>
+      </Row>
+
+      {/* Renderize o componente Cart abaixo do botão Carrinho */}
+      <Cart cart={cart} removeFromCart={removeFromCart} />
+      
+      
           <Row>
             <p>{cep.logradouro}</p>
           </Row>
@@ -165,6 +189,7 @@ function Cardapio() {
               <Image style={{ width: "100%" }} src={play} />
             </Col>
           </Row>
+
         </Container>
 
       </Container>
