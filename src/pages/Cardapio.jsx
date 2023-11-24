@@ -35,12 +35,13 @@ function Cardapio() {
         const response = await fetch('http://localhost/api/login');
         const userData = await response.json();
         console.log('Dados do usuário após a chamada da API:', userData);
-        setUser(userData);
+        setUser(userData.user); // Observe que estou usando userData.user para obter os dados do usuário
       } catch (error) {
         console.error('Erro ao obter dados do usuário', error);
+        setUser(null); // ou setUser({}) dependendo do que faz sentido para sua aplicação
       }
     };
-  
+
     fetchUserData();
   }, []);
 
@@ -56,11 +57,11 @@ function Cardapio() {
   };
 
 
-  useEffect(() => {
-    fetch('http://localhost/api/usuario')
-      .then((response) => response.json())
-      .then((json) => setUsuarios (json));
-  }, []);
+  // useEffect(() => {
+  //   fetch('http://localhost/api/usuario')
+  //     .then((response) => response.json())
+  //     .then((json) => setUsuarios (json));
+  // }, []);
 
   // usuarios.forEach(u => {
   //   if(u.funcao == "cliente") {
@@ -108,7 +109,8 @@ function Cardapio() {
       <Container style={{ width: "70%", marginTop: 40 }}>
 
       <Row style={{ marginTop: 20 }}>
-    <UserProfile user={user} />
+     {/* Passe os dados do usuário para o UserProfile como propriedade */}
+     <UserProfile user={user} />
   </Row>
 
         <Image style={{ width: "100%" }} src={tartaruga} />
