@@ -24,7 +24,7 @@ import Cart from "../components/carrinho";
 function Cardapio() {
   const location = useLocation();
 
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState(null);
     const [cart, setCart] = useState([]);
   
 
@@ -34,7 +34,7 @@ function Cardapio() {
       try {
         const response = await fetch('http://localhost/api/login');
         const userData = await response.json();
-        console.log('Dados do usuário após a chamada da API:', userData);
+        console.log('Dados do usuário após a chamada da API:', {userData});
         setUser(userData);
       } catch (error) {
         console.error('Erro ao obter dados do usuário', error);
@@ -42,7 +42,7 @@ function Cardapio() {
     };
   
     fetchUserData();
-  }, []);
+  }, {});
 
  
 
@@ -55,26 +55,6 @@ function Cardapio() {
     setCart(updatedCart);
   };
 
-
-  useEffect(() => {
-    fetch('http://localhost/api/usuario')
-      .then((response) => response.json())
-      .then((json) => setUsuarios (json));
-  }, []);
-
-  // usuarios.forEach(u => {
-  //   if(u.funcao == "cliente") {
-  //     setFuncaoUsuario("cliente")
-  //   }
-  // });
-
-
-  // useEffect(() => {
-  //   const funcaoArmazenada = localStorage.getItem("funcaoUsuario");
-  //   if (funcaoArmazenada) {
-  //     setFuncaoUsuario(funcaoArmazenada);
-  //   }
-  // }, []);
   const [cep, setCep] = useState('');
   function data() {
     fetch('https://viacep.com.br/ws/01001000/json/')

@@ -66,7 +66,7 @@ function Cart({ cart, removeFromCart }) {
           </Col>
           <Col style={{ width:210 }} md={6}>
             <Row
-              Style={{
+              style={{
 
                 width:200,
               

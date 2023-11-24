@@ -15,12 +15,13 @@ import Pizza from "../assets/pizza.jpg";
 import { Form, FormLabel, InputGroup } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Entrar() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState(null);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   function handleLogin() {
@@ -28,45 +29,31 @@ function Entrar() {
       email: email,
       senha: senha,
     };
-  
-    fetch('http://localhost/api/login', {
-      method: 'POST',
-      body: JSON.stringify(data),
+
+    axios.post('http://localhost/api/login', data, {
       headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          "Accept": "application/json",
+        'Content-Type': 'application/json',
       },
-  })
-  .then(response => response.text())
-  .then(text => {
-    console.log('Resposta completa da API:', text);
-    text = text.trim();
-    console.log('Resposta da API (após limpeza):', text);
-    
-    try {
-      const json = JSON.parse(text); // Tentar analisar o JSON
+    })
+      .then(response => {
+        console.log('Resposta completa da API:', response.data);
 
-      if (json.message === 'Login bem-sucedido') {
-        // Se o login for bem-sucedido, envie os dados diretamente para o UserProfile
-        //setUserProfileData(json.user);
-        
+        if (response.data.message === 'Login bem-sucedido') {
+          // Se o login for bem-sucedido, envie os dados diretamente para o UserProfile
+          setUser(response.data.user);
 
-        // Redirecione para a tela do cardápio
-        navigate('/cardapio');
-      } else {
-        // Trate o caso em que o login não foi bem-sucedido
+          // Redirecione para a tela do cardápio
+          navigate('/cardapio');
+        } else {
+          // Trate o caso em que o login não foi bem-sucedido
+          alert('Erro ao fazer login');
+        }
+      })
+      .catch(error => {
+        console.error('Erro durante a requisição:', error);
         alert('Erro ao fazer login');
-      }
-    } catch (error) {
-      console.error('Erro ao analisar JSON:', error);
-      alert('Erro ao fazer login');
-    }
-  })
-  .catch(error => {
-    console.error('Erro durante a requisição:', error);
-    alert('Erro ao fazer login');
-  });
-}
+      });
+  }
   return (
     <div>
       <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
