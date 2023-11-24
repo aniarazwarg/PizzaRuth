@@ -20,7 +20,7 @@ function Entrar() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState(null);
-
+  const [user, setUser] = useState([]);
   const navigate = useNavigate();
 
   function handleLogin() {

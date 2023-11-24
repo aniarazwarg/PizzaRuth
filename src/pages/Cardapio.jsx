@@ -24,7 +24,7 @@ import Cart from "../components/carrinho";
 function Cardapio() {
   const location = useLocation();
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState([]);
     const [cart, setCart] = useState([]);
   
 
@@ -135,13 +135,13 @@ function Cardapio() {
             <h5>🍕 Pizzas</h5>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <CardPizzas addToCart={addToCart}/>
+            <CardPizzas addToCart={addToCart} />
           </Row>
           <Row style={{ marginTop: 20 }}>
             <h5>🤤 Entradinhas</h5>
           </Row>
           <Row style={{ marginTop: 20 }}>
-            <CardEntradinhas addToCart={addToCart}/>
+            <CardEntradinhas addToCart={addToCart} />
           </Row>
           <Row style={{ marginTop: 20 }}>
             <h5>🍫 Sobremesas</h5>
