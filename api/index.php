@@ -85,12 +85,27 @@ function getLogin(Request $request, Response $response, array $args)
             return $response->withJson(['error' => 'Senha incorreta']);
         }
     } catch (PDOException $e) {
-        return $response->withJson(['error' => 'Erro ao fazer login: ' . $e->getMessage()], 500);
+        return $response->withJson(['error' => 'Erro ao fazer login: ' . $e->getMessage()]);
     } catch (Exception $e) {
-        return $response->withJson(['error' => $e->getMessage()], 400);
+        return $response->withJson(['error' => $e->getMessage()]);
     }
 }
 
+function getUserData(Request $request, Response $response, array $args)
+{
+    // Recupere o ID do usuário a partir da sessão ou de qualquer outra fonte que você esteja usando
+    $userId = getUserId(); // Implemente a função getUserId() para recuperar o ID do usuário
+
+    $sql = "SELECT email, funcao FROM usuarios WHERE id = :id";
+    $stmt = getConn()->prepare($sql);
+    $stmt->bindParam(':id', $userId);
+    $stmt->execute();
+
+    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $response->getBody()->write(json_encode($userData));
+    return $response;
+}
 
 function getPizza(Request $request, Response $response, array $args)
 {

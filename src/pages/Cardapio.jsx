@@ -24,7 +24,7 @@ import Cart from "../components/carrinho";
 function Cardapio() {
   const location = useLocation();
 
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState(null);
     const [cart, setCart] = useState([]);
   
 
@@ -34,16 +34,15 @@ function Cardapio() {
       try {
         const response = await fetch('http://localhost/api/login');
         const userData = await response.json();
-        console.log('Dados do usuário após a chamada da API:', userData);
-        setUser(userData.user); // Observe que estou usando userData.user para obter os dados do usuário
+        console.log('Dados do usuário após a chamada da API:', {userData});
+        setUser(userData);
       } catch (error) {
         console.error('Erro ao obter dados do usuário', error);
-        setUser(null); // ou setUser({}) dependendo do que faz sentido para sua aplicação
       }
     };
-
+  
     fetchUserData();
-  }, []);
+  }, {});
 
  
 
@@ -56,26 +55,6 @@ function Cardapio() {
     setCart(updatedCart);
   };
 
-
-  // useEffect(() => {
-  //   fetch('http://localhost/api/usuario')
-  //     .then((response) => response.json())
-  //     .then((json) => setUsuarios (json));
-  // }, []);
-
-  // usuarios.forEach(u => {
-  //   if(u.funcao == "cliente") {
-  //     setFuncaoUsuario("cliente")
-  //   }
-  // });
-
-
-  // useEffect(() => {
-  //   const funcaoArmazenada = localStorage.getItem("funcaoUsuario");
-  //   if (funcaoArmazenada) {
-  //     setFuncaoUsuario(funcaoArmazenada);
-  //   }
-  // }, []);
   const [cep, setCep] = useState('');
   function data() {
     fetch('https://viacep.com.br/ws/01001000/json/')
@@ -109,8 +88,7 @@ function Cardapio() {
       <Container style={{ width: "70%", marginTop: 40 }}>
 
       <Row style={{ marginTop: 20 }}>
-     {/* Passe os dados do usuário para o UserProfile como propriedade */}
-     <UserProfile user={user} />
+    <UserProfile user={user} />
   </Row>
 
         <Image style={{ width: "100%" }} src={tartaruga} />
