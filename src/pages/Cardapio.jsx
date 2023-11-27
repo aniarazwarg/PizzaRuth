@@ -83,7 +83,7 @@ function Cardapio() {
               <Nav.Link style={{ color: "red" }} href="/">
                 Início
               </Nav.Link>
-              <Nav.Link href="/Cadastro">Cadastrar Produto</Nav.Link>
+              {/* <Nav.Link href="/Cadastro">Cadastrar Produto</Nav.Link> */}
               {/* <Nav.Link href="#link">Sair</Nav.Link> */}
               <button
                 onClick={() => {
@@ -161,12 +161,13 @@ function Cardapio() {
             <CardSobremesas addToCart={addToCart} />
           </Row>
           <Row style={{ marginBottom: 30 }}>
-            <Button
+            <Button  id="carrinho"
               style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
               variant="outline-dark"
             >
               Carrinho
             </Button>
+            <a id="carrinho"></a>
           </Row>
 
           {/* Renderize o componente Cart abaixo do botão Carrinho */}
