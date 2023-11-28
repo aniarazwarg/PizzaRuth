@@ -167,16 +167,21 @@ function Cardapio() {
           <Row style={{ marginTop: 20 }}>
             <CardSobremesas addToCart={addToCart} />
           </Row>
-          <Row style={{ marginBottom: 30 }}>
-            <Button  id="carrinho"
-              style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
-              variant="outline-dark"
-            >
-              Carrinho
-            </Button>
-            <a id="carrinho"></a>
-          </Row>
-
+          {user?.funcao === 'cliente' && (
+  <>
+    {/* ... outros elementos ... */}
+    <Button
+      id="carrinho"
+      style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
+      variant="outline-dark"
+      onClick={scrollToCarrinho}
+    >
+      Carrinho
+    </Button>
+    {/* Renderize o componente Cart abaixo do botão Carrinho */}
+    <Cart cart={cart} removeFromCart={removeFromCart} />
+  </>
+)}
           {/* Renderize o componente Cart abaixo do botão Carrinho */}
           <Cart cart={cart} removeFromCart={removeFromCart} />
 
