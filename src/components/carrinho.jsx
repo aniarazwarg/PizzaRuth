@@ -13,15 +13,23 @@ function Cart({ cart, removeFromCart, sendOrder }) {
 
   const handleBuyClick = () => {
     if (cart.length > 0) {
+      // Armazena o carrinho no localStorage antes de enviar o pedido
+      localStorage.setItem('carrinho', JSON.stringify(cart));
       sendOrder(); // Chama a função sendOrder do Cardapio para enviar o pedido
     } else {
       alert("Seu carrinho está vazio. Adicione itens antes de comprar.");
     }
   };
 
+  const handleClearCart = () => {
+    // Limpa o carrinho no localStorage e no estado local
+    localStorage.removeItem('carrinho');
+    removeFromCart(null, true); // Ajuste a função removeFromCart conforme necessário
+  };
+
   return (
-    <div>
-      <Card style={{ display: 'flex', width: "100%", marginRight: 20, marginBottom: 30, minHeight: 300, alignself: "center", justifyContent: 'center' }}>
+    <Card style={{ width: "100%", marginBottom: 30 }}>
+      <Card.Body>
         <Row>
           <Col md={6}>
             <ul>
@@ -31,29 +39,36 @@ function Cart({ cart, removeFromCart, sendOrder }) {
                   <Button
                     variant="outline-danger"
                     onClick={() => removeFromCart(item.id)}
-                    style={{ margin: 20 }}
+                    style={{ marginLeft: 10 }}
                   >
                     Remover
                   </Button>
                 </li>
               ))}
             </ul>
-            <Row>
+            <Row className="mt-4">
               <h2>Total: R${getTotalPrice()}</h2>
             </Row>
           </Col>
-          <Col md={6}>
+          <Col md={6} className="d-flex align-items-center justify-content-center">
             <Button
               variant="success"
               onClick={handleBuyClick}
-              style={{ margin: 20 }}
+              disabled={cart.length === 0}
+              style={{ marginRight: 10 }}
             >
               Comprar
             </Button>
+            <Button
+              variant="outline-secondary"
+              onClick={handleClearCart}
+            >
+              Limpar Carrinho
+            </Button>
           </Col>
         </Row>
-      </Card>
-    </div>
+      </Card.Body>
+    </Card>
   );
 }
 

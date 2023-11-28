@@ -47,6 +47,7 @@ $app->get('/comentarios', 'getComentarios');
 $app->put('/curtidas/{id}', 'getCurtidas');
 $app->post('/login','getLogin');
 $app->get('/login','getLogin');
+$app->post('/orders', 'sendOrder');
 
 
 
@@ -133,10 +134,16 @@ function getLogin(Request $request, Response $response, array $args)
             // Senha correta
             $userData = [
                 'cd_cliente' => isset($user['cd_cliente']) ? $user['cd_cliente'] : null,
-                'nome' => $user['nome'],
+                'nome' => $user['nome'], 
                 'email' => $user['email'],
                 'funcao' => $user['funcao'],
+                'logradouro' => $user['logradouro'],
+                'numero' => $user['numero'],
+                'bairro' => $user['bairro'],
+                'cidade' => $user['cidade'],
+                'estado' => $user['estado'],
             ];
+
 
             return $response->withJson(['message' => 'Login bem-sucedido', 'user' => $userData]);
         } else {
@@ -151,21 +158,6 @@ function getLogin(Request $request, Response $response, array $args)
 }
 
 
-function getUserData(Request $request, Response $response, array $args)
-{
-    // Recupere o ID do usuário a partir da sessão ou de qualquer outra fonte que você esteja usando
-    $userId = getUserId(); // Implemente a função getUserId() para recuperar o ID do usuário
-
-    $sql = "SELECT email, funcao FROM usuarios WHERE id = :id";
-    $stmt = getConn()->prepare($sql);
-    $stmt->bindParam(':id', $userId);
-    $stmt->execute();
-
-    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    $response->getBody()->write(json_encode($userData));
-    return $response;
-}
 
 function getPizza(Request $request, Response $response, array $args)
 {
@@ -184,76 +176,25 @@ function getUsuario(Request $request, Response $response, array $args)
     $response->getBody()->write(json_encode($usuarios));
     return $response;
 }
-
-function getInserir(Request $request, Response $response, array $args)
+function sendOrder(Request $request, Response $response, array $args)
 {
-    $data = $request->getParsedBody(); // Obtenha os dados enviados na solicitação POST
+    // Obtenha os dados do pedido do corpo da requisição
+    $data = $request->getParsedBody();
 
-    // Conecte-se ao banco de dados usando PDO ou outro método de sua escolha
-    $db = new PDO(
-        'mysql:host=localhost:3306;dbname=slimprodutos',
-        'root',
-        ''
-    );
+    // Armazene os dados do pedido no localStorage
+    // Você pode adaptar a estrutura conforme necessário
+    $localStorageKey = 'carrinho';
+    $carrinhoAtual = json_decode($_SESSION[$localStorageKey] ?? '[]', true);
+    $carrinhoAtual[] = [
+        'items' => $data['items'],
+        'totalPrice' => $data['totalPrice'],
+        'paymentMethod' => $data['paymentMethod'],
+    ];
+    $_SESSION[$localStorageKey] = json_encode($carrinhoAtual);
 
-    // Execute a inserção no banco de dados
-    $stmt = $db->prepare('INSERT INTO produto (NOME) VALUES (:valor1)');
-    $stmt->bindParam(':valor1', $data['valor1']);
-
-    if ($stmt->execute()) {
-        return $response->withJson(['message' => 'Dados inseridos com sucesso']);
-    } else {
-        return $response->withJson(['error' => 'Erro ao inserir dados'], 500);
-    }
+    return $response->withJson(['message' => 'Pedido armazenado no carrinho local']);
 }
-;
 
-// function getCadastrar(Request $request, Response $response, array $args)
-// {
-//     try {
-//         $data = $request->getParsedBody();
-
-//         error_log('Nova solicitação de cadastro: ' . json_encode($data));
-
-//         // Validação de e-mail
-//         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-//             throw new Exception('E-mail inválido');
-//         }
-
-//         $conn = getConn();
-
-//         // Hash da senha
-//         $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
-       
-
-//         // Inserir dados no banco de dados
-//         $stmt = $conn->prepare('INSERT INTO usuarios (email, senha, funcao, logradouro, numero, bairro, cidade, estado) 
-//                                 VALUES (:email, :senha, :funcao, :logradouro, :numero, :bairro, :cidade, :estado)');
-//         $stmt->bindParam(':email', $data['email']);
-//         $stmt->bindParam(':senha', $hashedPassword);
-//         $stmt->bindParam(':funcao', $data['funcao']);
-//         $stmt->bindParam(':logradouro', $data['logradouro']);
-//         $stmt->bindParam(':numero', $data['numero']);
-//         $stmt->bindParam(':bairro', $data['bairro']);
-//         $stmt->bindParam(':cidade', $data['cidade']);
-//         $stmt->bindParam(':estado', $data['estado']);
-
-//         $stmt->execute();
-
-//          // Adicione um log para registrar o sucesso do cadastro no lado do servidor
-//         error_log('Cadastro realizado com sucesso para o e-mail: ' . $data['email']);
-
-//         return $response->withJson(['message' => 'Dados inseridos com sucesso']);
-//     } catch (PDOException $e) {
-//         // Adicione log de erro
-//         error_log('Erro ao conectar ao banco de dados: ' . $e->getMessage());
-//         return $response->withJson(['error' => 'Erro ao conectar ao banco de dados: ' . $e->getMessage()], 500);
-//     } catch (Exception $e) {
-//         // Adicione log de erro
-//         error_log('Erro durante o cadastro: ' . $e->getMessage());
-//         return $response->withJson(['error' => $e->getMessage()], 400);
-//     }
-// }
 
 
 function getcadastrarPizza(Request $request, Response $response, array $args)
@@ -410,6 +351,70 @@ function getAlterar(Request $request, Response $response, array $args)
 
 //     $response->getBody()->write(json_encode($produto));
 //     return $response;
+// }
+
+// function getUserData(Request $request, Response $response, array $args)
+// {
+//     // Recupere o ID do usuário a partir da sessão ou de qualquer outra fonte que você esteja usando
+//     $userId = getUserId(); // Implemente a função getUserId() para recuperar o ID do usuário
+
+//     $sql = "SELECT email, funcao FROM usuarios WHERE id = :id";
+//     $stmt = getConn()->prepare($sql);
+//     $stmt->bindParam(':id', $userId);
+//     $stmt->execute();
+
+//     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+//     $response->getBody()->write(json_encode($userData));
+//     return $response;
+// }
+
+
+// function getCadastrar(Request $request, Response $response, array $args)
+// {
+//     try {
+//         $data = $request->getParsedBody();
+
+//         error_log('Nova solicitação de cadastro: ' . json_encode($data));
+
+//         // Validação de e-mail
+//         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+//             throw new Exception('E-mail inválido');
+//         }
+
+//         $conn = getConn();
+
+//         // Hash da senha
+//         $hashedPassword = password_hash($data['senha'], PASSWORD_DEFAULT);
+       
+
+//         // Inserir dados no banco de dados
+//         $stmt = $conn->prepare('INSERT INTO usuarios (email, senha, funcao, logradouro, numero, bairro, cidade, estado) 
+//                                 VALUES (:email, :senha, :funcao, :logradouro, :numero, :bairro, :cidade, :estado)');
+//         $stmt->bindParam(':email', $data['email']);
+//         $stmt->bindParam(':senha', $hashedPassword);
+//         $stmt->bindParam(':funcao', $data['funcao']);
+//         $stmt->bindParam(':logradouro', $data['logradouro']);
+//         $stmt->bindParam(':numero', $data['numero']);
+//         $stmt->bindParam(':bairro', $data['bairro']);
+//         $stmt->bindParam(':cidade', $data['cidade']);
+//         $stmt->bindParam(':estado', $data['estado']);
+
+//         $stmt->execute();
+
+//          // Adicione um log para registrar o sucesso do cadastro no lado do servidor
+//         error_log('Cadastro realizado com sucesso para o e-mail: ' . $data['email']);
+
+//         return $response->withJson(['message' => 'Dados inseridos com sucesso']);
+//     } catch (PDOException $e) {
+//         // Adicione log de erro
+//         error_log('Erro ao conectar ao banco de dados: ' . $e->getMessage());
+//         return $response->withJson(['error' => 'Erro ao conectar ao banco de dados: ' . $e->getMessage()], 500);
+//     } catch (Exception $e) {
+//         // Adicione log de erro
+//         error_log('Erro durante o cadastro: ' . $e->getMessage());
+//         return $response->withJson(['error' => $e->getMessage()], 400);
+//     }
 // }
 
 

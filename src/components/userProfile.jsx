@@ -1,52 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Button } from "react-bootstrap";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
   const [isCliente, setIsCliente] = useState(false);
   const [isAdministrador, setIsAdministrador] = useState(false);
-  const [orders, setOrders] = useState([]);
+  const [carrinho, setCarrinho] = useState([]);
 
   useEffect(() => {
     setIsCliente(user && user.funcao === "cliente");
     setIsAdministrador(user && user.funcao === "admin");
 
-    // Se o usuário for administrador, busca os pedidos recebidos
-    if (user && user.funcao === "admin") {
-      fetchOrders();
-    }
+    // Obter dados do carrinho do localStorage ao carregar o componente
+    const carrinhoAtual = JSON.parse(localStorage.getItem("carrinho")) || [];
+    setCarrinho(carrinhoAtual);
   }, [user]);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get(`http://localhost/api/orders`);
-      setOrders(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar os pedidos:", error);
-    }
-  };
-
-  const acceptOrder = async (orderId) => {
-    try {
-      const response = await axios.post(`http://localhost/api/orders/${orderId}/accept`);
-      console.log("Pedido aceito:", response.data);
-      // Atualiza a lista de pedidos após aceitar
-      fetchOrders();
-    } catch (error) {
-      console.error("Erro ao aceitar o pedido:", error);
-    }
-  };
-
-  const scrollToCarrinho = () => {
-    const carrinhoElement = document.getElementById("carrinho");
-    if (carrinhoElement) {
-      carrinhoElement.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const handleLogout = () => {
-    localStorage.clear();
+    // Remova os dados do usuário
+    localStorage.removeItem("user");
+
+    // Recarregue a página ou redirecione para a página de login, se necessário
     window.location.reload();
   };
 
@@ -73,7 +47,12 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
           {/* Botão "Sair" para todos os usuários */}
           <Button
             onClick={handleLogout}
-            style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginLeft: "auto" }}
+            style={{
+              fontWeight: "bold",
+              padding: 15,
+              borderRadius: 40,
+              marginLeft: "auto",
+            }}
             variant="outline-dark"
           >
             Sair
@@ -81,19 +60,35 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
 
           {/* Botão "Carrinho" */}
           {isCliente && (
-            <Button
-              onClick={scrollToCarrinho}
-              style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginRight: 10 }}
-              variant="outline-dark"
-            >
-              Carrinho
-            </Button>
+            <>
+              <Button
+                id="carrinho"
+                style={{
+                  fontWeight: "bold",
+                  padding: 15,
+                  borderRadius: 40,
+                }}
+                variant="outline-dark"
+                onClick={() => {
+                  const carrinhoElement = document.getElementById("carrinho");
+                  if (carrinhoElement) {
+                    carrinhoElement.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Carrinho
+              </Button>
+            </>
           )}
 
           {/* Botão "Cadastrar Novo Produto" */}
           {isAdministrador && (
             <Button
-              style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
+              style={{
+                fontWeight: "bold",
+                padding: 15,
+                borderRadius: 40,
+              }}
               variant="outline-dark"
             >
               <Link to="/cadastro">Cadastrar Novo Produto</Link>
@@ -103,14 +98,31 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
           {/* Botão "Enviar Pedido" */}
           {isCliente && showCart && (
             <Button
-              onClick={() => onSendOrder()}
-              style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginLeft: 10 }}
+              onClick={() => {
+                // Envia o pedido para o UserProfile (onSendOrder)
+                onSendOrder({
+                  items: carrinho,
+                  totalPrice: carrinho.reduce(
+                    (total, item) => total + Number(item.preco),
+                    0
+                  ),
+                  paymentMethod: "Cartão de Crédito",
+                });
+
+                // Limpa o carrinho local após enviar o pedido
+                // localStorage.removeItem("carrinho");
+              }}
+              style={{
+                fontWeight: "bold",
+                padding: 15,
+                borderRadius: 40,
+                marginLeft: 10,
+              }}
               variant="outline-dark"
             >
               Enviar Pedido
             </Button>
           )}
-
         </Navbar>
       ) : (
         <p>Usuário não detectado.</p>
@@ -121,13 +133,13 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
         <div>
           <h2>Pedidos Recebidos</h2>
           <ul>
-            {orders.map((order) => (
-              <li key={order.id}>
-                <strong>Cliente:</strong> {order.cliente}<br />
-                <strong>Produtos Pedidos:</strong> {order.produtos}<br />
-                <strong>Valor:</strong> {order.valor}<br />
-                <strong>Método de Pagamento:</strong> {order.pagamento}<br />
-                <Button onClick={() => acceptOrder(order.id)}>Aceitar Pedido</Button>
+            {carrinho.map((item, index) => (
+              <li key={index}>
+                <strong>Produto:</strong> {item.sabor}
+                <br />
+                <strong>Descrição:</strong> {item.descricao}
+                <br />
+                <strong>Preço:</strong> {item.preco}
               </li>
             ))}
           </ul>
