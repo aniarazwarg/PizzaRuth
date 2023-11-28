@@ -77,6 +77,30 @@ function Cardapio() {
     }
   };
 
+  const sendOrder = async () => {
+    // Prepare os dados do pedido
+    const orderData = {
+      userId: user.id,
+      items: cart,
+      totalPrice: cart.reduce((total, item) => total + Number(item.preco), 0),
+      paymentMethod: "Cartão de Crédito", // Adicione a forma de pagamento selecionada pelo usuário
+    };
+
+    try {
+      // Faça uma chamada HTTP para enviar o pedido para o servidor
+      const response = await axios.post("http://localhost/api/orders", orderData);
+
+      // Exiba uma mensagem ou realize outras ações com base na resposta do servidor
+      console.log("Resposta do servidor:", response.data);
+
+      // Limpe o carrinho após o pedido ser enviado com sucesso
+      setCart([]);
+    } catch (error) {
+      console.error("Erro ao enviar o pedido:", error);
+    }
+  };
+
+
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -169,7 +193,6 @@ function Cardapio() {
           </Row>
           {user?.funcao === 'cliente' && (
   <>
-    {/* ... outros elementos ... */}
     <Button
       id="carrinho"
       style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
@@ -178,16 +201,11 @@ function Cardapio() {
     >
       Carrinho
     </Button>
-    {/* Renderize o componente Cart abaixo do botão Carrinho */}
-    <Cart cart={cart} removeFromCart={removeFromCart} />
+    {/* Renderize o componente Cart apenas se o usuário for um cliente */}
+    <Cart cart={cart} removeFromCart={removeFromCart} sendOrder={sendOrder} />
   </>
 )}
-          {/* Renderize o componente Cart abaixo do botão Carrinho */}
-          <Cart cart={cart} removeFromCart={removeFromCart} />
-
-          <Row>
-            <p>{cep.logradouro}</p>
-          </Row>
+         
           <Row
             style={{
               alignItems: "center",

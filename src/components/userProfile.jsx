@@ -1,18 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Cart from "./carrinho";
+import axios from "axios"; // Importe o axios se ainda não estiver importado
 
-const UserProfile = ({ user }) => {
-  const isCliente = user && user.funcao === "cliente";
-  const isAdministrador = user && user.funcao === "admin";
+const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
+  const [isCliente, setIsCliente] = useState(false);
+  const [isAdministrador, setIsAdministrador] = useState(false);
+  const [orders, setOrders] = useState([]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.reload();
+  useEffect(() => {
+    setIsCliente(user && user.funcao === "cliente");
+    setIsAdministrador(user && user.funcao === "admin");
+
+    // Se o usuário for administrador, busca os pedidos recebidos
+    if (user && user.funcao === "admin") {
+      fetchOrders();
+    }
+  }, [user]);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`http://localhost/api/orders`);
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar os pedidos:", error);
+    }
   };
 
-  const [adminCart, setAdminCart] = useState([]);
+  const acceptOrder = async (orderId) => {
+    try {
+      const response = await axios.post(`http://localhost/api/orders/${orderId}/accept`);
+      console.log("Pedido aceito:", response.data);
+      // Atualiza a lista de pedidos após aceitar
+      fetchOrders();
+    } catch (error) {
+      console.error("Erro ao aceitar o pedido:", error);
+    }
+  };
 
   return (
     <>
@@ -23,55 +46,44 @@ const UserProfile = ({ user }) => {
             minHeight: 20,
           }}
         >
-          <Navbar.Brand>
-            {isCliente ? (
-              <h4 style={{ whiteSpace: "nowrap" }}>
-                Olá {user.nome}, faça seu pedido e o entregaremos em{" "}
-                {user?.logradouro}, nº {user?.numero}.
-              </h4>
-            ) : (
-              <h4 style={{ whiteSpace: "nowrap" }}>
-                Olá, {user.nome}, veja os pedidos recebidos.
-              </h4>
-            )}
-          </Navbar.Brand>
-
-          {/* Botão "Sair" para todos os usuários */}
-          <Button
-            onClick={handleLogout}
-            style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
-            variant="outline-dark"
-          >
-            Sair
-          </Button>
-
-          {/* Botão "Carrinho" */}
           {isCliente && (
             <>
-              <Button
-                onClick={() => setAdminCart([])} {/* Limpa o carrinho de admin quando cliente clicar */}
-                style={{
-                  fontWeight: "bold",
-                  padding: 15,
-                  borderRadius: 40,
-                }}
-                variant="outline-dark"
-              >
-                Carrinho
-              </Button>
-              {/* Renderiza o componente Cart apenas para usuários com a função "admin" */}
-              <Cart cart={adminCart} removeFromCart={/* Função de remoção para admin */} />
+              {showCart && (
+                <Button
+                  onClick={() => onSendOrder()}
+                  style={{
+                    fontWeight: "bold",
+                    padding: 15,
+                    borderRadius: 40,
+                  }}
+                  variant="outline-dark"
+                >
+                  Enviar Pedido
+                </Button>
+              )}
             </>
           )}
 
-          {/* Botão "Cadastrar Novo Produto" */}
           {isAdministrador && (
-            <Button
-              style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
-              variant="outline-dark"
-            >
-              <Link to="/cadastro">Cadastrar Novo Produto</Link>
-            </Button>
+            <>
+              <h4 style={{ whiteSpace: "nowrap" }}>
+                Olá, {user.nome}, veja os pedidos recebidos.
+              </h4>
+              {orders.length > 0 ? (
+                <ul>
+                  {orders.map((order) => (
+                    <li key={order.id}>
+                      Pedido de {order.user.nome} - Total: R${order.totalPrice.toFixed(2)}
+                      <Button onClick={() => acceptOrder(order.id)}>
+                        Aceitar Pedido
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Nenhum pedido recebido.</p>
+              )}
+            </>
           )}
         </Navbar>
       ) : (

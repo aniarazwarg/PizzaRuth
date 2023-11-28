@@ -1,14 +1,20 @@
-import React, { useState } from "react";
-import { Navbar, Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import Menu from "./Menu";
+import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
 import Logo from "../assets/logo_ruth.png";
+import Banner from "../assets/banner.png";
 import Card from "react-bootstrap/Card";
-import { Form } from "react-bootstrap";
+import Pizza from "../assets/pizza.jpg";
+import { Form, FormLabel, InputGroup } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Entrar() {
@@ -54,7 +60,6 @@ function Entrar() {
         alert("Erro ao fazer login");
       });
   }
-
   return (
     <div>
       <Navbar
@@ -93,28 +98,142 @@ function Entrar() {
             <Col md={6}>
               <Image src={Logo} rounded style={{ padding: 10, width: 700 }} />
             </Col>
-            {/* Botão "Cadastrar Novo Produto" */}
-            {user && user.funcao === "admin" && (
-              <Col md={2} style={{ textAlign: "end" }}>
-                <Button
-                  style={{
-                    fontWeight: "bold",
-                    padding: 15,
-                    borderRadius: 40,
-                  }}
-                  variant="outline-dark"
-                >
-                  <Link to="/cadastro">Cadastrar Novo Produto</Link>
-                </Button>
-              </Col>
-            )}
           </Row>
+          {/* <Row>
+                <Col md={12} style={{
+            height:5,
+          borderTop:1,
+          borderColor:"black",
+          backgroundColor:"black",
+          margin: 0,
+          }}> </Col>
+            </Row> */}
         </Container>
       </Navbar>
 
-      {/* Restante do código... */}
+      <div>
+        <Container style={{ padding: 100 }}>
+          <Row>
+            <Col xs={6}>
+              <img
+                src="https://pizzahut.com.br/assets/account-art.97b4e2c7.svg"
+                alt="new"
+              />
+            </Col>
+            <Col xs={6}>
+              <Card
+                style={{
+                  border: "none",
+                  width: "100%",
+                }}
+              >
+                {/* <Card.Img variant="top" src={Pizza} /> */}
+                <Card.Body
+                  style={{
+                    margin: 60,
+                  }}
+                >
+                  <Card.Title style={{ width: "55%" }}>
+                    Acessar minha conta
+                  </Card.Title>
+                  <Card.Text>Preencha seu dados para fazer Login</Card.Text>
+                  <Form>
+                    <Form.Group>
+                      <Form.Label style={{ marginTop: 20 }}>
+                        Qual seu e-mail?
+                      </Form.Label>
+                      <Form.Control
+                        placeholder="Informa pra gente seu e-mail"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={{
+                          borderRadius: 20,
+                          borderColor: "black",
+                          padding: 10,
+                        }}
+                      ></Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label style={{ marginTop: 20 }}>
+                        Qual sua senha?
+                      </Form.Label>
+                      <Form.Control
+                        placeholder="Agora informe uma senha"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                        style={{
+                          borderRadius: 20,
+                          borderColor: "black",
+                          padding: 10,
+                        }}
+                      ></Form.Control>
+                    </Form.Group>
+                  </Form>
+                  <Button
+                    onClick={handleLogin}
+                    style={{
+                      width: "100%",
+                      backgroundColor: "red",
+                      borderRadius: 20,
+                      borderWidth: 0,
+                      marginTop: 20,
+                      marginBottom: 20,
+                      padding: 10,
+                    }}
+                  >
+                    Acessar
+                  </Button>
+
+                  <div className="d-flex justify-content-center">
+                    <p>Ou use outra conta</p>
+                  </div>
+                  <Button
+                    style={{
+                      width: "100%",
+                      backgroundColor: "white",
+                      borderRadius: 20,
+                      borderWidth: 2,
+                      marginTop: 20,
+                      padding: 10,
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Entrar com o Google
+                  </Button>
+                  <Button
+                    style={{
+                      width: "100%",
+                      backgroundColor: "white",
+                      borderRadius: 20,
+                      borderWidth: 2,
+                      borderColor: "black",
+                      marginTop: 20,
+                      padding: 10,
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Acessar com a Apple
+                  </Button>
+                  <div
+                    className="d-flex justify-content-center"
+                    style={{ marginTop: 20, padding: 10, color: "black" }}
+                  >
+                    <p>
+                      Ainda não tem uma conta?{" "}
+                      <a style={{ color: "red" }} href="">
+                        Cadastre-se aqui
+                      </a>{" "}
+                    </p>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     </div>
   );
 }
-
 export default Entrar;
