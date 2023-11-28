@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Button } from "react-bootstrap";
-import axios from "axios"; // Importe o axios se ainda não estiver importado
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
   const [isCliente, setIsCliente] = useState(false);
@@ -37,6 +38,18 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
     }
   };
 
+  const scrollToCarrinho = () => {
+    const carrinhoElement = document.getElementById("carrinho");
+    if (carrinhoElement) {
+      carrinhoElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   return (
     <>
       {user ? (
@@ -46,48 +59,79 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
             minHeight: 20,
           }}
         >
-          {isCliente && (
-            <>
-              {showCart && (
-                <Button
-                  onClick={() => onSendOrder()}
-                  style={{
-                    fontWeight: "bold",
-                    padding: 15,
-                    borderRadius: 40,
-                  }}
-                  variant="outline-dark"
-                >
-                  Enviar Pedido
-                </Button>
-              )}
-            </>
+          {isCliente ? (
+            <h4 style={{ whiteSpace: "nowrap" }}>
+              Olá {user.nome}, faça seu pedido e o entregaremos em{" "}
+              {user?.logradouro}, nº {user?.numero}.
+            </h4>
+          ) : (
+            <h4 style={{ whiteSpace: "nowrap" }}>
+              Olá, {user.nome}, veja os pedidos recebidos.
+            </h4>
           )}
 
-          {isAdministrador && (
-            <>
-              <h4 style={{ whiteSpace: "nowrap" }}>
-                Olá, {user.nome}, veja os pedidos recebidos.
-              </h4>
-              {orders.length > 0 ? (
-                <ul>
-                  {orders.map((order) => (
-                    <li key={order.id}>
-                      Pedido de {order.user.nome} - Total: R${order.totalPrice.toFixed(2)}
-                      <Button onClick={() => acceptOrder(order.id)}>
-                        Aceitar Pedido
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Nenhum pedido recebido.</p>
-              )}
-            </>
+          {/* Botão "Sair" para todos os usuários */}
+          <Button
+            onClick={handleLogout}
+            style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginLeft: "auto" }}
+            variant="outline-dark"
+          >
+            Sair
+          </Button>
+
+          {/* Botão "Carrinho" */}
+          {isCliente && (
+            <Button
+              onClick={scrollToCarrinho}
+              style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginRight: 10 }}
+              variant="outline-dark"
+            >
+              Carrinho
+            </Button>
           )}
+
+          {/* Botão "Cadastrar Novo Produto" */}
+          {isAdministrador && (
+            <Button
+              style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
+              variant="outline-dark"
+            >
+              <Link to="/cadastro">Cadastrar Novo Produto</Link>
+            </Button>
+          )}
+
+          {/* Botão "Enviar Pedido" */}
+          {isCliente && showCart && (
+            <Button
+              onClick={() => onSendOrder()}
+              style={{ fontWeight: "bold", padding: 15, borderRadius: 40, marginLeft: 10 }}
+              variant="outline-dark"
+            >
+              Enviar Pedido
+            </Button>
+          )}
+
         </Navbar>
       ) : (
         <p>Usuário não detectado.</p>
+      )}
+
+      {/* Exibe detalhes do pedido */}
+      {isAdministrador && (
+        <div>
+          <h2>Pedidos Recebidos</h2>
+          <ul>
+            {orders.map((order) => (
+              <li key={order.id}>
+                <strong>Cliente:</strong> {order.cliente}<br />
+                <strong>Produtos Pedidos:</strong> {order.produtos}<br />
+                <strong>Valor:</strong> {order.valor}<br />
+                <strong>Método de Pagamento:</strong> {order.pagamento}<br />
+                <Button onClick={() => acceptOrder(order.id)}>Aceitar Pedido</Button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       <p></p>
     </>

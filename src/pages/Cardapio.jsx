@@ -27,6 +27,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import Carrinho from "../components/carrinho";
 import Cart from "../components/carrinho";
+import axios from "axios";
 
 function Cardapio() {
   const location = useLocation();
@@ -34,21 +35,6 @@ function Cardapio() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [cart, setCart] = useState([]);
 
-  // useEffect para buscar os dados do usuário quando o componente é montado
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost/api/login');
-  //       const userData = await response.json();
-  //       console.log('Dados do usuário após a chamada da API:', {userData});
-  //       setUser(userData);
-  //     } catch (error) {
-  //       console.error('Erro ao obter dados do usuário', error);
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, {});
 
   const addToCart = (item) => {
     setCart([...cart, item]);
@@ -80,26 +66,25 @@ function Cardapio() {
   const sendOrder = async () => {
     // Prepare os dados do pedido
     const orderData = {
-      userId: user.id,
-      items: cart,
-      totalPrice: cart.reduce((total, item) => total + Number(item.preco), 0),
-      paymentMethod: "Cartão de Crédito", // Adicione a forma de pagamento selecionada pelo usuário
+        userId: user.id,
+        items: cart,
+        totalPrice: cart.reduce((total, item) => total + Number(item.preco), 0),
+        paymentMethod: "Cartão de Crédito", // Adicione a forma de pagamento selecionada pelo usuário
     };
 
     try {
-      // Faça uma chamada HTTP para enviar o pedido para o servidor
-      const response = await axios.post("http://localhost/api/orders", orderData);
+        // Faça uma chamada HTTP para enviar o pedido para o servidor
+        const response = await axios.post("http://localhost/api/orders", orderData);
 
-      // Exiba uma mensagem ou realize outras ações com base na resposta do servidor
-      console.log("Resposta do servidor:", response.data);
+        // Exiba uma mensagem ou realize outras ações com base na resposta do servidor
+        console.log("Resposta do servidor:", response.data);
 
-      // Limpe o carrinho após o pedido ser enviado com sucesso
-      setCart([]);
+        // Limpe o carrinho após o pedido ser enviado com sucesso
+        setCart([]);
     } catch (error) {
-      console.error("Erro ao enviar o pedido:", error);
+        console.error("Erro ao enviar o pedido:", error);
     }
-  };
-
+};
 
   return (
     <>
@@ -130,7 +115,7 @@ function Cardapio() {
       </Navbar>
       <Container style={{ width: "70%", marginTop: 40 }}>
         <Row style={{ marginTop: 20 }}>
-          <UserProfile user={user} />
+        <UserProfile user={user} cart={cart} removeFromCart={removeFromCart} onSendOrder={sendOrder} />
         </Row>
 
         <Image style={{ width: "100%" }} src={tartaruga} />

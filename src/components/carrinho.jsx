@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 
-function Cart({ cart, removeFromCart }) {
+function Cart({ cart, removeFromCart, sendOrder }) {
   const getTotalPrice = () => {
     if (Array.isArray(cart) && cart.length > 0) {
       const totalPrice = cart.reduce((total, item) => total + Number(item.preco), 0);
@@ -36,7 +36,6 @@ function Cart({ cart, removeFromCart }) {
                     Remover
                   </Button>
                 </li>
-                
               ))}
             </ul>
             <Row>
@@ -44,15 +43,14 @@ function Cart({ cart, removeFromCart }) {
             </Row>
           </Col>
           <Col md={6}>
-            {/* ... outros elementos do componente */}
             <Button
-              variant="success" // Use a variante 'success' ou apropriada para o botão "Comprar"
+              variant="success"
               onClick={handleBuyClick}
               style={{ margin: 20 }}
             >
               Comprar
             </Button>
-            </Col>
+          </Col>
         </Row>
       </Card>
     </div>
