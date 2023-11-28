@@ -1,6 +1,10 @@
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-import { Navbar, Button } from "react-bootstrap";
+import { Navbar} from "react-bootstrap";
 import { Link } from "react-router-dom";
+
+
+
 
 const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
   const [isCliente, setIsCliente] = useState(false);
@@ -24,130 +28,150 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
     window.location.reload();
   };
 
-  return (
-    <>
-      {user ? (
-        <Navbar
-          style={{
-            width: "100%",
-            minHeight: 20,
-          }}
-        >
-          {isCliente ? (
-            <h4 style={{ whiteSpace: "nowrap" }}>
-              Olá {user.nome}, faça seu pedido e o entregaremos em{" "}
-              {user?.logradouro}, nº {user?.numero}.
-            </h4>
-          ) : (
-            <h4 style={{ whiteSpace: "nowrap" }}>
-              Olá, {user.nome}, veja os pedidos recebidos.
-            </h4>
-          )}
+  const handleFinalizar = () => {
+    // Remova os dados do usuário
+    localStorage.removeItem("carrinho")};
 
-          {/* Botão "Sair" para todos os usuários */}
-          <Button
-            onClick={handleLogout}
+
+    
+    return (
+      <>
+        {user ? (
+          <Navbar
             style={{
-              fontWeight: "bold",
-              padding: 15,
-              borderRadius: 40,
-              marginLeft: "auto",
+              width: "100%",
+              minHeight: 20,
             }}
-            variant="outline-dark"
           >
-            Sair
-          </Button>
+            {isCliente ? (
+              <h4 style={{ whiteSpace: "nowrap" }}>
+                Olá {user.nome}, faça seu pedido e o entregaremos em{" "}
+                {user?.logradouro}, nº {user?.numero}.
+              </h4>
+            ) : (
+              <h4 style={{ whiteSpace: "nowrap" }}>
+                Olá, {user.nome}
+              </h4>
+            )}
 
-          {/* Botão "Carrinho" */}
-          {isCliente && (
-            <>
+            {/* Botão "Sair" para todos os usuários */}
+            <Button
+              onClick={handleLogout}
+              style={{
+                fontWeight: "bold",
+                padding: 15,
+                borderRadius: 40,
+                marginLeft: "auto",
+              }}
+              variant="outline-dark"
+            >
+              Sair
+            </Button>
+
+            {/* Botão "Carrinho" */}
+            {isCliente && (
+              <>
+                <Button
+                  id="carrinho"
+                  style={{
+                    fontWeight: "bold",
+                    padding: 15,
+                    borderRadius: 40,
+                  }}
+                  variant="outline-dark"
+                  onClick={() => {
+                    const carrinhoElement = document.getElementById("carrinho");
+                    if (carrinhoElement) {
+                      carrinhoElement.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                >
+                  Carrinho
+                </Button>
+              </>
+            )}
+
+            {/* Botão "Cadastrar Novo Produto" */}
+            {isAdministrador && (
               <Button
-                id="carrinho"
                 style={{
                   fontWeight: "bold",
                   padding: 15,
                   borderRadius: 40,
                 }}
                 variant="outline-dark"
-                onClick={() => {
-                  const carrinhoElement = document.getElementById("carrinho");
-                  if (carrinhoElement) {
-                    carrinhoElement.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
               >
-                Carrinho
+                <Link to="/cadastro">Cadastrar Novo Produto</Link>
               </Button>
-            </>
-          )}
+            )}
 
-          {/* Botão "Cadastrar Novo Produto" */}
-          {isAdministrador && (
-            <Button
-              style={{
-                fontWeight: "bold",
-                padding: 15,
-                borderRadius: 40,
-              }}
-              variant="outline-dark"
-            >
-              <Link to="/cadastro">Cadastrar Novo Produto</Link>
-            </Button>
-          )}
+            {/* Botão "Enviar Pedido" */}
+            {isCliente && showCart && (
+              <Button
+                onClick={() => {
+                  // Envia o pedido para o UserProfile (onSendOrder)
+                  onSendOrder({
+                    items: carrinho,
+                    totalPrice: carrinho.reduce(
+                      (total, item) => total + Number(item.preco),
+                      0
+                    ),
+                    paymentMethod: "Cartão de Crédito",
+                  });
 
-          {/* Botão "Enviar Pedido" */}
-          {isCliente && showCart && (
-            <Button
-              onClick={() => {
-                // Envia o pedido para o UserProfile (onSendOrder)
-                onSendOrder({
-                  items: carrinho,
-                  totalPrice: carrinho.reduce(
-                    (total, item) => total + Number(item.preco),
-                    0
-                  ),
-                  paymentMethod: "Cartão de Crédito",
-                });
+                  // Limpa o carrinho local após enviar o pedido
+                  // localStorage.removeItem("carrinho");
+                }}
+                style={{
+                  fontWeight: "bold",
+                  padding: 15,
+                  borderRadius: 40,
+                  marginLeft: 10,
+                }}
+                variant="outline-dark"
+              >
+                Enviar Pedido
+              </Button>
+            )}
+          </Navbar>
+        ) : (
+          <p>Usuário não detectado.</p>
+        )}
 
-                // Limpa o carrinho local após enviar o pedido
-                // localStorage.removeItem("carrinho");
-              }}
-              style={{
-                fontWeight: "bold",
-                padding: 15,
-                borderRadius: 40,
-                marginLeft: 10,
-              }}
-              variant="outline-dark"
-            >
-              Enviar Pedido
-            </Button>
-          )}
-        </Navbar>
-      ) : (
-        <p>Usuário não detectado.</p>
-      )}
 
-      {/* Exibe detalhes do pedido */}
-      {isAdministrador && (
-        <div>
-          <h2>Pedidos Recebidos</h2>
-          <ul>
-            {carrinho.map((item, index) => (
-              <li key={index}>
-                <strong>Produto:</strong> {item.sabor}
-                <br />
-                <strong>Descrição:</strong> {item.descricao}
-                <br />
-                <strong>Preço:</strong> {item.preco}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <p></p>
-    </>
-  );
+{isAdministrador && (
+  <div>
+    <Card style={{ width: "90%", marginRight: 20, marginBottom: 30, minHeight: 300 }}>
+      <Card.Body style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Card.Title style={{ margin: 0 }}>Pedidos Recebidos</Card.Title>
+        <ul>
+          {carrinho.map((item, index) => (
+            <li key={index}>
+              <Card.Text style={{ textAlign: 'center' }}>{item.sabor}</Card.Text>
+              <Card.Text style={{ textAlign: 'center' }}>R${item.preco}</Card.Text>
+            </li>
+          ))}
+        </ul>
+        {/* <Card.Text style={{ textAlign: 'center' }}>Valor Total: R${getTotalPrice()}</Card.Text> */}
+        <Button
+          style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}
+          variant="outline-dark"
+          onClick={() => handleFinalizar}
+        >
+          <p style={{ fontSize: '1vw', marginBottom: 0 }}>Finalizar Pedido</p>
+        </Button>
+      </Card.Body>
+    </Card>
+  </div>
+)}
+         
+              
+      </>
+    )  
 };
 
-export default UserProfile;
+
+
+
+
+        export default UserProfile;
