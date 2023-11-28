@@ -1,102 +1,80 @@
-import Menu from "./Menu";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   Container,
   Image,
   Row,
   Col,
-  Nav,
-  Button,
   Form,
-  FormLabel,
-  InputGroup,
+  Button,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useLocation, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import Logo from "../assets/logo_ruth2.png";
-import "bootstrap/dist/css/bootstrap.min.css";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Banner from "../assets/banner.png";
-import Card from "react-bootstrap/Card";
-import Pizza from "../assets/pizza.jpg";
 import { useNavigate } from "react-router-dom";
+import Card from "react-bootstrap/Card";
+import Logo from "../assets/logo_ruth2.png";
 
 function Criar() {
   const navigate = useNavigate();
-
+  const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
-  const [funcao, setfuncao] = useState("");
-  const [endereco, setEndereco] = useState({});
- 
+  const [funcao, setFuncao] = useState("");
+  const [endereco, setEndereco] = useState({
+    cep: "",
+    logradouro: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    estado: "",
+  });
+
   
+
   const handleCepChange = (e) => {
     const newCep = e.target.value;
-
-    // Remova caracteres não numéricos do CEP
     const cleanedCep = newCep.replace(/\D/g, "");
-
     setEndereco((prevEndereco) => ({ ...prevEndereco, cep: cleanedCep }));
   };
-
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-  };
-
-  const handleSenhaChange = (e) => {
-    const newSenha = e.target.value;
-    setSenha(newSenha);
-  };
-
-  const handlefuncaoChange = (e) => {
-    const newfuncao = e.target.value;
-    setfuncao(newfuncao);
-  };
-
-  // const handleLogradouroChange = (e) => {
-  //   const newLogradouro = e.target.value;
-  // };
-
-  // const handleNumeroChange = (e) => {
-  //   const newNumero = e.target.value;
-  //   setNumero(newNumero);
-  // };
-  // const handleBairroChange = (e) => {
-  //   const newBairro = e.target.value;
-  //   setBairro(newBairro);
-  // };
-
-  // const handleCidadeChange = (e) => {
-  //   const newCidade = e.target.value;
-  //   setCidade(newCidade);
-  // };
-
-  // const handleEstadoChange = (e) => {
-  //   const newEstado = e.target.value;
-  //   setEstado(newEstado);
-  // };
-
-  function data() {
-    // Valide o CEP antes de fazer a chamada à API
+  const handleNomeChange = (e) => setNome(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleSenhaChange = (e) => setSenha(e.target.value);
+  const handleFuncaoChange = (e) => setFuncao(e.target.value);
+  const handleNumeroChange = (e) =>
+    setEndereco({ ...endereco, numero: e.target.value });
+  const data = () => {
     if (!endereco.cep || endereco.cep.length !== 8) {
       alert("CEP inválido. Certifique-se de inserir um CEP válido.");
       return;
     }
+
     fetch(`https://viacep.com.br/ws/${endereco.cep}/json/`)
       .then((response) => response.json())
-      .then((json) => setEndereco(json))
+      .then((json) => {
+        setEndereco({
+          ...endereco,
+          logradouro: json.logradouro,
+          bairro: json.bairro,
+          cidade: json.localidade, // Verifique o nome do campo na resposta da API
+          estado: json.uf,
+        });
+      })
       .catch((error) => console.error("Erro ao obter dados do CEP:", error));
-  }
-  function criar() {
+  };
+
+  const criar = () => {
+    if (!endereco.numero) {
+      alert("Número é obrigatório. Preencha o número antes de cadastrar.");
+      return;
+    }
+
     fetch("http://localhost/api/cadastrar", {
       method: "POST",
       body: JSON.stringify({
+        nome: nome,
         email: email,
         senha: senha,
         funcao: funcao,
-        logradouro:endereco.logradouro,
+        logradouro: endereco.logradouro,
         numero: endereco.numero,
         bairro: endereco.bairro,
         cidade: endereco.cidade,
@@ -107,40 +85,15 @@ function Criar() {
         Accept: "application/json",
       },
     })
-      .then((response) => response.text())
-      .then((text) => {
-        console.log(text); // Exibir a resposta do servidor no console
-        return JSON.parse(text); // Tentar analisar o JSON
-      })
+      .then((response) => response.json())
       .then((json) => {
         console.log(json);
-
-        // Após o cadastro bem-sucedido, redirecione para a tela de login
-        alert("Cadastro realizado do com sucesso!");
+        alert("Cadastro realizado com sucesso!");
         navigate("/entrar");
       })
       .catch((err) => console.log(err));
-  }
+  };
 
-  // function cadastrar() {
-  //   if (!email || !senha) {
-  //       return alert("Preencha todos os campos");
-  //   } else {
-  //       const requestBody = {
-  //         email:email,
-  //         senha:senha,
-  //         funcao: funcao,
-  //         logradouro:logradouro,
-  //         numero:numero,
-  //         bairro:bairro,
-  //         cidade:cidade,
-  //         estado:estado,
-  //       };
-
-  //       criar(); // Remova o argumento aqui
-  //       return alert("Cadastro realizado com sucesso!");
-  //   }
-  // }
   useEffect(() => {}, []);
 
   return (
@@ -211,6 +164,20 @@ function Criar() {
                   </Card.Title>
                   {/* <Card.Text>Boa, vamos começar!</Card.Text> */}
                   <Form>
+                    <Form.Group className="mb-3" controlId="nome">
+                      <Form.Label>Nome</Form.Label>
+                      <Form.Control
+                        style={{
+                          borderRadius: 20,
+                          borderColor: "black",
+                          padding: 10,
+                        }}
+                        type="text"
+                        placeholder="Digite seu nome"
+                        onChange={handleNomeChange}
+                        value={nome}
+                      />
+                    </Form.Group>
                     <Form.Group className="mb-3 mt-5" controlId="email">
                       <Form.Label>Endereço de email</Form.Label>
                       <Form.Control
@@ -277,27 +244,35 @@ function Criar() {
                     <Form.Group className="mb-3" controlId="endereco">
                       <Form.Label>Endereço</Form.Label>
                       <Form.Control
-                        onChange={(e) => setEndereco({ ...prevEndereco,logradouro: e.target.value })}
+                        onChange={(e) =>
+                          setEndereco({
+                            ...endereco,
+                            logradouro: e.target.value,
+                          })
+                        }
                         type="text"
                         placeholder="Endereço"
                         value={endereco.logradouro}
                       />
-                      {/* <Form.Text>{endereço.logradouro}</Form.Text> */}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="numero">
                       <Form.Label>Número</Form.Label>
                       <Form.Control
-                        onChange={(e) => setEndereco({ ...prevEndereco,numero: e.target.value })}
+                        onChange={handleNumeroChange}
                         type="text"
-                        placeholder="Endereço"
+                        placeholder="Número"
                         value={endereco.numero}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="bairro">
                       <Form.Label>Bairro</Form.Label>
                       <Form.Control
-                        onChange={(e) => setEndereco({ ...prevEndereco,bairro: e.target.value })}
-                      
+                        onChange={(e) =>
+                          setEndereco({
+                            ...endereco,
+                            bairro: e.target.value,
+                          })
+                        }
                         type="text"
                         placeholder="Bairro"
                         value={endereco.bairro}
@@ -306,35 +281,36 @@ function Criar() {
                     <Form.Group className="mb-3" controlId="cidade">
                       <Form.Label>Cidade</Form.Label>
                       <Form.Control
-                        onChange={(e) => setEndereco({ ...prevEndereco,cidade: e.target.value })}
+                        onChange={(e) =>
+                          setEndereco({
+                            ...endereco,
+                            cidade: e.target.value,
+                          })
+                        }
                         type="text"
                         placeholder="Cidade"
-                        value={endereco.localidade}
+                        value={endereco.cidade}
                       />
                     </Form.Group>
-                    {/* <Form.Group className="mb-3" controlId="cidade">
-                      <Form.Label>Cidade</Form.Label>
-                      <Form.Control
-                        onChange={handleCidadeChange}
-                        type="text"
-                        placeholder="Cidade"
-                        value={endereco.localidade}
-                      /> */}
-                    {/* </Form.Group> */}
                     <Form.Group className="mb-3" controlId="estado">
                       <Form.Label>Estado</Form.Label>
                       <Form.Control
-                        onChange={(e) => setEndereco({ ...prevEndereco,estado: e.target.value })}
+                        onChange={(e) =>
+                          setEndereco({
+                            ...endereco,
+                            estado: e.target.value,
+                          })
+                        }
                         type="text"
                         placeholder="Estado"
-                        value={endereco.uf}
+                        value={endereco.estado}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="Função de Usuário">
                       <Form.Label>Função de Usuário</Form.Label>
                       <Form.Control
                         as="select"
-                        onChange={handlefuncaoChange}
+                        onChange={handleFuncaoChange}
                         value={funcao}
                       >
                         <option value="">Selecione a Função de Usuário</option>
@@ -390,4 +366,5 @@ function Criar() {
     </div>
   );
 }
+
 export default Criar;

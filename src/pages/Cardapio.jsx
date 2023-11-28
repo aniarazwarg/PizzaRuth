@@ -70,6 +70,13 @@ function Cardapio() {
     data();
   }, [user]);
 
+  const scrollToCarrinho = () => {
+    const carrinhoElement = document.getElementById("carrinho");
+    if (carrinhoElement) {
+      carrinhoElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -85,14 +92,14 @@ function Cardapio() {
               </Nav.Link>
               {/* <Nav.Link href="/Cadastro">Cadastrar Produto</Nav.Link> */}
               {/* <Nav.Link href="#link">Sair</Nav.Link> */}
-              <button
+              {/* <button
                 onClick={() => {
                   localStorage.clear();
                   window.location.reload();
                 }}
               >
                 Sair
-              </button>
+              </button> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
