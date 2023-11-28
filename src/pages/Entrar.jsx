@@ -28,6 +28,8 @@ function Entrar() {
     const data = {
       email: email,
       senha: senha,
+      logradouro: response?.data?.user?.logradouro,
+  numero: response?.data?.user?.numero
     };
 
     axios

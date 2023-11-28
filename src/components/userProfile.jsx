@@ -28,7 +28,7 @@ const UserProfile = ({ user }) => {
           }}
         >
           <Navbar.Brand>
-            <h4 style={{ whiteSpace: "nowrap" }}>Olá {user.nome}, faça seu pedido e o entregaremos em {user.logradouro},nº  {user.numero}, </h4>
+            <h4 style={{ whiteSpace: "nowrap" }}>Olá 🤤 {user.nome}, faça seu pedido e o entregaremos em {user.logradouro},nº  {user.numero}, </h4>
           </Navbar.Brand>
 
           {/* Botão "Sair" para todos os usuários */}
