@@ -11,6 +11,7 @@ import Menu from "./Menu";
 import CardPizzas from "../components/cardPizzas";
 import CardEntradinhas from "../components/cardEntradinhas";
 import CardSobremesas from "../components/cardSobremesas";
+import CardBedidas from "../components/cardBebidas";
 import UserProfile from "../components/userProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pizza from "../assets/pizza.jpg";
@@ -151,29 +152,7 @@ function Cardapio() {
               marginTop: 30,
             }}
           >
-            <Col md={8}>
-              <h4>🔥Dá um Ruth nestas ofertas!</h4>
-            </Col>
-            <Col md={2}>
-              <a href="">Ver todas</a>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: 20 }}>
-            <Col style={{ height: 200 }} md={4}>
-              <a href="">
-                <Image style={{ width: "100%", height: 200 }} src={promocao1} />
-              </a>
-            </Col>
-            <Col style={{ height: 200 }} md={4}>
-              <a href="">
-                <Image style={{ width: "100%", height: 200 }} src={promocao2} />
-              </a>
-            </Col>
-            <Col style={{ height: 200 }} md={4}>
-              <a href="">
-                <Image style={{ width: "100%", height: 200 }} src={promocao3} />
-              </a>
-            </Col>
+            
           </Row>
         </Container>
         <Container style={{ marginTop: 40 }}>
@@ -198,6 +177,14 @@ function Cardapio() {
           <Row style={{ marginTop: 20 }}>
             <CardSobremesas addToCart={addToCart} />
           </Row>
+          <Row style={{ marginTop: 20 }}>
+            <h5>🥤 Bebidas</h5>
+          </Row>
+          <Row style={{ marginTop: 20 }}>
+            <CardBedidas addToCart={addToCart} />
+          </Row>
+
+
           {user?.funcao === 'cliente' && (
   <>
     <Button

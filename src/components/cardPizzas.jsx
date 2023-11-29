@@ -1,14 +1,54 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import UserProfile from "./userProfile"; // Importe o componente UserProfile
 
 function CardPizzas({ addToCart }) {
   const [pizzas, setPizzas] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user")) || null; // Obtenha o usuário do localStorage
 
   useEffect(() => {
     fetch('http://localhost/api/pizza')
       .then((response) => response.json())
       .then((json) => setPizzas(json.filter(pizza => pizza.categoria === 'pizza')));
   }, []);
+
+  const renderButtons = (pizza) => {
+    if (user) {
+      if (user.funcao === "cliente") {
+        return (
+          <Button
+            style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center', marginBottom: 10 }}
+            variant="outline-dark"
+            onClick={() => addToCart(pizza)}
+          >
+            <p style={{ fontSize: '1vw', marginBottom: 0 }}>Adicionar ao Carrinho</p>
+          </Button>
+        );
+      } else if (user.funcao === "admin") {
+        return (
+          <>
+            <Button
+              variant="outline-primary"
+              style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center', marginBottom: 10 }}
+              onClick={() => console.log('Editar produto')}
+            >
+              Editar Produto
+            </Button>
+            <Button
+              variant="outline-danger"
+              style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center', marginBottom: 10 }}
+              onClick={() => console.log('Excluir produto')}
+            >
+              Excluir Produto
+            </Button>
+          </>
+        );
+      }
+    }
+
+    // Se não houver usuário, não exiba botão
+    return null;
+  };
 
   return (
     <>
@@ -22,13 +62,9 @@ function CardPizzas({ addToCart }) {
             <Card.Img src={"src/assets/" + pizza.imagem} style={{ width: '50%' }} />
             <Card.Text style={{ textAlign: 'center' }}>{pizza.descricao}</Card.Text>
             <Card.Text style={{ textAlign: 'center' }}>R${pizza.preco}</Card.Text>
-            <Button
-              style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}
-              variant="outline-dark"
-              onClick={() => addToCart(pizza)}
-            >
-              <p style={{ fontSize: '1vw', marginBottom: 0 }}>Adicionar ao Carrinho</p>
-            </Button>
+
+            {renderButtons(pizza)}
+
           </Card.Body>
         </Card>
       ))}

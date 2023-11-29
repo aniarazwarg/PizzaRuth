@@ -134,13 +134,14 @@ function Cadastro() {
           <option value="pizza">Pizza</option>
           <option value="entradinha">Entradinha</option>
           <option value="sobremesa">Sobremesa</option>
+          <option value="bebidas">Bebidas</option>
           {/* Adicione outras opções de categoria conforme necessário */}
         </Form.Control>
       </Form.Group>
                             
                             <Col className="d-flex justify-content-center">
           <Button style={{ width: '100%' }} variant="primary" type="submit">
-            Cadastrar Pizza
+            Cadastrar Produto
           </Button>
         </Col>
                         </Form>
