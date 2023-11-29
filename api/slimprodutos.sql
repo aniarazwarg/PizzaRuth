@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 29-Nov-2023 às 02:14
+-- Tempo de geração: 29-Nov-2023 às 02:22
 -- Versão do servidor: 10.4.24-MariaDB
 -- versão do PHP: 8.1.6
 
@@ -85,7 +85,8 @@ INSERT INTO `pizzas` (`id`, `sabor`, `descricao`, `imagem`, `preco`, `categoria`
 (8, 'sorvete 5 leites', 'leite condensado, creme de leite, leite em pó, leite de vaca...', 'leitinho.png', '33.00', 'sobremesa'),
 (9, 'Energia', 'Queijo Brie, mel, damasco e castanha', 'pizzabrie.jpg', '50.00', 'pizza'),
 (10, 'Ki Sabor', 'Queijo Provolone, carne seca, cebola roxa, catupiry e milho ', 'carne seca.jpg', '45.00', 'pizza'),
-(11, 'Frango com catupiry®', 'frango desfiado e catupiry original.', 'frango.jfif', '35.00', 'pizza');
+(11, 'Frango com catupiry®', 'frango desfiado e catupiry original.', 'frango.jfif', '35.00', 'pizza'),
+(12, 'Salamão', 'pizza de salame do salomão', 'passarinho.jpg', '36.00', 'pizza');
 
 -- --------------------------------------------------------
 
@@ -177,7 +178,8 @@ INSERT INTO `usuarios` (`cd_cliente`, `nome`, `email`, `senha`, `funcao`, `logra
 (23, 'Funcionario', 'ggg@gg.gg', '$2y$10$aJ2XE76gDEWgARpaEcYOseyNuDPs6YvS99jXX5MTnCIrKCwwzHQly', 'admin', 'Avenida Rangel Pestana', 142, 'Jabaquara', 'Santos', 'SP'),
 (24, 'Gustavo', 'gustavo@gmail.com', '$2y$10$RCFSKr1LghCmvl3Wz4YE0OpmdSoCnnKHDjHCQEn9mNh1j9QZBQhFO', 'admin', 'Rua Sacadura Cabral', 44, 'Vila Jockei Clube', 'São Vicente', 'SP'),
 (25, 'Aniara', 'nia@nia.nia', '$2y$10$cAmKfbMXD1jat3e4mLi3L.390Ejl7zHW2eP.TQNLyDCaC6mWMKi/e', 'cliente', 'Caminho da Paz', 511, 'Caneleira', 'Santos', 'SP'),
-(26, 'Yan', 'yan@yan.yan', '$2y$10$Wajk4EbJTRwa4XSlY4D0oeS3tbxrA5eABKSsqa5dbbz36g80DKYfW', 'cliente', 'Rua Doutor Edgardo Boaventura', 28, 'Vila Mathias', 'Santos', 'SP');
+(26, 'Yan', 'yan@yan.yan', '$2y$10$Wajk4EbJTRwa4XSlY4D0oeS3tbxrA5eABKSsqa5dbbz36g80DKYfW', 'cliente', 'Rua Doutor Edgardo Boaventura', 28, 'Vila Mathias', 'Santos', 'SP'),
+(27, 'Luca', 'luca_bol@bol.com.br', '$2y$10$xCv21EQXjzed9iKQFkSX/uL5UCsW8WchNv/coP4avwLrQxXnxZrBy', 'cliente', 'Rua Alexandre Herculano', 88, 'Boqueirão', 'Santos', 'SP');
 
 --
 -- Índices para tabelas despejadas
@@ -247,7 +249,7 @@ ALTER TABLE `order`
 -- AUTO_INCREMENT de tabela `pizzas`
 --
 ALTER TABLE `pizzas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
@@ -265,7 +267,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Restrições para despejos de tabelas
