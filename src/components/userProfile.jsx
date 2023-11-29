@@ -2,6 +2,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import { Navbar} from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Menu from "../pages/Menu";
 
 
 
@@ -11,6 +12,8 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
   const [isAdministrador, setIsAdministrador] = useState(false);
   const [carrinho, setCarrinho] = useState([]);
 
+  
+
   useEffect(() => {
     setIsCliente(user && user.funcao === "cliente");
     setIsAdministrador(user && user.funcao === "admin");
@@ -19,6 +22,8 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
     const carrinhoAtual = JSON.parse(localStorage.getItem("carrinho")) || [];
     setCarrinho(carrinhoAtual);
   }, [user]);
+
+  
 
   const handleLogout = () => {
     // Remova os dados do usuário
@@ -30,7 +35,9 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
 
   const handleFinalizar = () => {
     // Remova os dados do usuário
-    localStorage.removeItem("carrinho")};
+    localStorage.removeItem("carrinho");
+    window.location.reload();
+  };
 
 
     
@@ -72,7 +79,7 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
             {isCliente && (
               <>
                 <Button
-                  id="carrinho"
+                 
                   style={{
                     fontWeight: "bold",
                     padding: 15,
@@ -135,9 +142,17 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
             )}
           </Navbar>
         ) : (
-          <p>Usuário não detectado.</p>
+<Row>
+  <Col md={8}>
+  <h4  style={{ whiteSpace: "nowrap" }}>Usuário não indentificado</h4>
+  </Col>
+  <Col style={{marginBottom:20}}>
+  <Menu/>
+  </Col>
+</Row>
+           
+          
         )}
-
 
 {isAdministrador && (
   <div>
@@ -151,8 +166,11 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
               <Card.Text style={{ textAlign: 'center' }}>R${item.preco}</Card.Text>
             </li>
           ))}
+          {/* <li>
+           {carrinho.totalPrice}
+          </li> */}
         </ul>
-        {/* <Card.Text style={{ textAlign: 'center' }}>Valor Total: R${getTotalPrice()}</Card.Text> */}
+        
         <Button
           style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}
           variant="outline-dark"
@@ -168,8 +186,8 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
               
       </>
     )  
-};
 
+          };
 
 
 

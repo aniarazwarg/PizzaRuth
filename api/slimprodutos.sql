@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Nov-2023 às 02:53
+-- Tempo de geração: 29-Nov-2023 às 02:14
 -- Versão do servidor: 10.4.24-MariaDB
 -- versão do PHP: 8.1.6
 
@@ -46,6 +46,19 @@ INSERT INTO `categoria` (`ID`, `NOME`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `order`
+--
+
+CREATE TABLE `order` (
+  `id` int(11) NOT NULL,
+  `pedido` varchar(5000) NOT NULL,
+  `valor` decimal(10,0) NOT NULL,
+  `pagamento` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `pizzas`
 --
 
@@ -71,7 +84,8 @@ INSERT INTO `pizzas` (`id`, `sabor`, `descricao`, `imagem`, `preco`, `categoria`
 (7, 'cacetinho', 'pequeno cacete bem recheado', 'breadstick.png', '18.00', 'entradinha'),
 (8, 'sorvete 5 leites', 'leite condensado, creme de leite, leite em pó, leite de vaca...', 'leitinho.png', '33.00', 'sobremesa'),
 (9, 'Energia', 'Queijo Brie, mel, damasco e castanha', 'pizzabrie.jpg', '50.00', 'pizza'),
-(10, 'Ki Sabor', 'Queijo Provolone, carne seca, cebola roxa, catupiry e milho ', 'carne seca.jpg', '45.00', 'pizza');
+(10, 'Ki Sabor', 'Queijo Provolone, carne seca, cebola roxa, catupiry e milho ', 'carne seca.jpg', '45.00', 'pizza'),
+(11, 'Frango com catupiry®', 'frango desfiado e catupiry original.', 'frango.jfif', '35.00', 'pizza');
 
 -- --------------------------------------------------------
 
@@ -160,18 +174,10 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`cd_cliente`, `nome`, `email`, `senha`, `funcao`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`) VALUES
 (9, '', 'fvillelas.tecnico@gmail.com', '$2y$10$IETJphQtxGkNvq8GpbgibuQ', 'cliente', '', 412, '', '', ''),
 (10, '', 'issoeumemail@ficticio.com', '$2y$10$nH8wBd1D0v7c1LBr932tEed', 'cliente', '', 214, '', '', ''),
-(12, '', 'niah.zwarg@gmail.com', '$2y$10$7ZjsgGM/UuAiWFh6azEiF.1gXhpavX5W1yr1gIkLPCen0GG6E3PhC', 'cliente', '', 217, '', '', ''),
-(14, '', 'eu@eu.com', '$2y$10$EOwGib/a9z1xs6MIztQG8.APPUWtya.VSAE/Mr4lgqtjLx4R1IZj.', 'admin', '', 11, '', '', ''),
-(15, '', 'eu@eu.eu', '$2y$10$G83uN797nGb.2QkKTZO3lOMnJJ3Z0jA3UeWmYAPwWmWJ3GdDSD3ZK', 'cliente', '', 0, '', '', ''),
-(16, '', 'aaa@aa.aa', '$2y$10$gu2KCK1Jw6Wv8MFs.qkFjeG8cWD/JHAILXXjK/q318GvobaoVVyBO', 'admin', '', 0, '', '', ''),
-(17, '', 'oi@oi.oi', '$2y$10$CuvFot4SwKtQ6w6GdQeUY.QnX7/TtVYbg09AbZRCNq3ZO78XWKbGO', 'admin', '', 0, '', '', ''),
-(18, '', 'i@i.i', '$2y$10$vKh8W23tI38wvSqbzr.pR.RRuicwLxqmqw4/w/.gU4MgjAyMJ7P4K', 'cliente', '', 0, '', '', ''),
-(19, '', 'cli@cli.cli', '$2y$10$OiUlVNN/cex/5JlrnQ9sROV3oxojYhKrI54/zde2IE3h4.qj6X28O', 'cliente', '', 511, '', '', ''),
-(20, '', 'ggg@gg.gg', '$2y$10$WBtXyGR1.5aukoMrF3/QAejkb8lhs.J7hdDIH2ZoVSGRLhYFjuoDq', 'admin', 'Rua Santos Dumont ', 1, 'Estuário', 'Santos ', 'SP '),
-(21, '', 'oo@oo.oo', '$2y$10$N4q4TSfnE.Jiw1vQDjKQg.GM3x6Gd7mzSJA.7BaaNH9Bl97ZNKlAC', 'admin', 'Avenida Rangel Pestana', 412, 'Jabaquara', 'Santos', 'SP'),
-(22, '', 'ff@ff.ff', '$2y$10$7rVgVLQe5fd0pAh.yrIG2uXfAUYQeW.q0HEc2ibA5keI6XpS4xYO6', 'admin', 'Rua Santos Dumont', 11, 'Estuário', 'Santos', 'SP'),
-(23, 'Aniara', 'ggg@gg.gg', '$2y$10$aJ2XE76gDEWgARpaEcYOseyNuDPs6YvS99jXX5MTnCIrKCwwzHQly', 'admin', 'Avenida Rangel Pestana', 142, 'Jabaquara', 'Santos', 'SP'),
-(24, 'Gustavo', 'gustavo@gmail.com', '$2y$10$RCFSKr1LghCmvl3Wz4YE0OpmdSoCnnKHDjHCQEn9mNh1j9QZBQhFO', 'admin', 'Rua Sacadura Cabral', 44, 'Vila Jockei Clube', 'São Vicente', 'SP');
+(23, 'Funcionario', 'ggg@gg.gg', '$2y$10$aJ2XE76gDEWgARpaEcYOseyNuDPs6YvS99jXX5MTnCIrKCwwzHQly', 'admin', 'Avenida Rangel Pestana', 142, 'Jabaquara', 'Santos', 'SP'),
+(24, 'Gustavo', 'gustavo@gmail.com', '$2y$10$RCFSKr1LghCmvl3Wz4YE0OpmdSoCnnKHDjHCQEn9mNh1j9QZBQhFO', 'admin', 'Rua Sacadura Cabral', 44, 'Vila Jockei Clube', 'São Vicente', 'SP'),
+(25, 'Aniara', 'nia@nia.nia', '$2y$10$cAmKfbMXD1jat3e4mLi3L.390Ejl7zHW2eP.TQNLyDCaC6mWMKi/e', 'cliente', 'Caminho da Paz', 511, 'Caneleira', 'Santos', 'SP'),
+(26, 'Yan', 'yan@yan.yan', '$2y$10$Wajk4EbJTRwa4XSlY4D0oeS3tbxrA5eABKSsqa5dbbz36g80DKYfW', 'cliente', 'Rua Doutor Edgardo Boaventura', 28, 'Vila Mathias', 'Santos', 'SP');
 
 --
 -- Índices para tabelas despejadas
@@ -183,6 +189,12 @@ INSERT INTO `usuarios` (`cd_cliente`, `nome`, `email`, `senha`, `funcao`, `logra
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `UC_NOME` (`NOME`);
+
+--
+-- Índices para tabela `order`
+--
+ALTER TABLE `order`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `pizzas`
@@ -226,10 +238,16 @@ ALTER TABLE `categoria`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de tabela `order`
+--
+ALTER TABLE `order`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `pizzas`
 --
 ALTER TABLE `pizzas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
@@ -247,7 +265,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `cd_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Restrições para despejos de tabelas

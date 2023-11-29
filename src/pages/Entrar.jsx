@@ -158,6 +158,7 @@ function Entrar() {
                         Qual sua senha?
                       </Form.Label>
                       <Form.Control
+                      type="password"
                         placeholder="Agora informe uma senha"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}

@@ -204,7 +204,6 @@ function Cardapio() {
       id="carrinho"
       style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
       variant="outline-dark"
-      onClick={scrollToCarrinho}
     >
       Carrinho
     </Button>
