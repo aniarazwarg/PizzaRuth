@@ -30,8 +30,8 @@ function App() {
           <Route path="/Usuario" element={<Usuario/>}/>
           <Route path="/CEP" element={<CEPForm/>}/>
           <Route path="/Produtos" element={<Produtos/>}/>
-          <Route path="/Cadastro" element={<Cadastro/>}/>
-          <Route path="/cardapio" element={<Cardapio/>} />
+          <Route path="/Cadastro" element={<Cadastro />} />
+          <Route path="/cardapio" element={<Cardapio />} />
         </Routes>
       </BrowserRouter>
     </div>

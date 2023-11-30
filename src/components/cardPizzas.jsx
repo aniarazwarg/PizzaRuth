@@ -1,16 +1,39 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import UserProfile from "./userProfile"; // Importe o componente UserProfile
+import { useNavigate } from "react-router-dom";
 
 function CardPizzas({ addToCart }) {
   const [pizzas, setPizzas] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user")) || null; // Obtenha o usuário do localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost/api/pizza')
       .then((response) => response.json())
       .then((json) => setPizzas(json.filter(pizza => pizza.categoria === 'pizza')));
   }, []);
+
+  const handleEditProduct = (productId) => {
+    fetchData(productId);
+  };
+
+  const fetchData = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost/api/pizza/${productId}`);
+
+      if (response.ok) {
+        const produtoData = await response.json();
+
+        // Navegue para a tela de cadastro com os dados preenchidos
+        navigate(`/cadastro/${productId}`, { state: { produtoData, isEditing: true } });
+      } else {
+        console.error('Erro ao obter dados do produto para edição');
+      }
+    } catch (error) {
+      console.error('Erro ao obter dados do produto para edição:', error);
+    }
+  };
 
   const renderButtons = (pizza) => {
     if (user) {
@@ -30,7 +53,7 @@ function CardPizzas({ addToCart }) {
             <Button
               variant="outline-primary"
               style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center', marginBottom: 10 }}
-              onClick={() => console.log('Editar produto')}
+              onClick={() => handleEditProduct(pizza.id)}
             >
               Editar Produto
             </Button>
@@ -46,7 +69,6 @@ function CardPizzas({ addToCart }) {
       }
     }
 
-    // Se não houver usuário, não exiba botão
     return null;
   };
 

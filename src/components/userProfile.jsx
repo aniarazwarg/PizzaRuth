@@ -136,6 +136,10 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
                 ))}
               </ul>
 
+              <Card.Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.2vw', marginTop: 10 }}>
+          Total: R${carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2)}
+        </Card.Text>
+
               <Button
                 style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}
                 variant="outline-dark"

@@ -29,6 +29,9 @@ function Cart({ cart, removeFromCart, sendOrder }) {
 };
 
 const handleBuyClick = async () => {
+
+  console.log('handleBuyClick foi chamado');
+
   if (cart.length > 0) {
     const totalPrice = getTotalPrice();
     const paymentMethod = document.getElementById('formPaymentMethod').value;
@@ -37,7 +40,7 @@ const handleBuyClick = async () => {
     const customerData = getCustomerData();
 
     try {
-      const response = await fetch('http://localhost/api/orders', {
+      const response = await fetch(`http://localhost/api/orders/${customerData.cd_cliente}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,15 +50,26 @@ const handleBuyClick = async () => {
           totalPrice,
           paymentMethod,
           customerData,
+          cdCliente: customerData.cd_cliente, // Obtém o cd_cliente do localStorage
         }),
       });
 
-      const responseData = await response.json();
 
+      // Verifica se a resposta tem um status de sucesso
+      if (!response.ok) {
+        const errorMessage = await response.text(); // Obtém o texto da resposta em caso de erro
+        throw new Error(`Erro na requisição: ${response.statusText}. Detalhes: ${errorMessage}`);
+      }
+    
+      const responseData = await response.json();
+      console.log('Dados do Pedido:', responseData);
+    
       // Trate a resposta do backend conforme necessário
-      console.log(responseData);
+      // ...
+    
     } catch (error) {
       console.error('Erro ao enviar pedido:', error);
+      alert('Erro ao enviar pedido. Por favor, tente novamente.');
     }
   } else {
     alert('Seu carrinho está vazio. Adicione itens antes de comprar.');

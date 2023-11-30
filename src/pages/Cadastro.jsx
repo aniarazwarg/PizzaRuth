@@ -1,57 +1,77 @@
 import { Navbar, Container, Image, Row, Col, Nav, Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useLocation } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import { useState, useEffect } from "react";
 import Logo from "../assets/logo_ruth2.png";
-import Card from "react-bootstrap/Card"
+import Card from "react-bootstrap/Card";
 import axios from 'axios';
 
-
-
- 
 function Cadastro() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [productIdToEdit, setProductIdToEdit] = useState(null);
+  const [productDataToEdit, setProductDataToEdit] = useState({});
 
-        const [sabor, setsabor] = useState('');
-        const [descricao, setdescricao] = useState('');
-        const [imagemFile, setimagemFile] = useState(null);
-        const [preco, setpreco] = useState('');
-        const [categoria, setcategoria] = useState('');
-    
-        const handlesaborChange = (e) => setsabor(e.target.value);
-        const handledescricaoChange = (e) => setdescricao(e.target.value);
-        const handleimagemFileChange = (e) => setimagemFile(e.target.files[0]);
-        const handleprecoChange = (e) => setpreco(e.target.value);
-        const handleCategoriaChange = (e) => setcategoria(e.target.value); // Nova função para atualizar a categoria
-    
-        const handleCadastro = async () => {
-            try {
-                const formData = new FormData();
-                formData.append('sabor', sabor);
-                formData.append('descricao', descricao);
-                formData.append('imagem', imagemFile);
-                formData.append('preco', preco);
-                formData.append('categoria', categoria); // Adiciona a categoria ao FormData
-        
-                const response = await axios.post('http://localhost/api/cadastrarPizza', formData);
-        
-                console.log(response.data);
-                alert('Produto cadastrado com sucesso!');
-            } catch (error) {
-                console.error('Erro ao cadastrar produto:', error.response || error);
-                alert('Erro ao cadastrar produto');
-            }
-        };
-        const handleCadastrar = async (e) => {
-            e.preventDefault(); // Evita o comportamento padrão do envio do formulário
-        
-            if (!sabor || !descricao || !imagemFile || !preco || !categoria) {
-                alert("Preencha todos os campos obrigatórios");
-            } else {
-                await handleCadastro();
-                // alert("Cadastro do Produto realizado com sucesso!");
-            }
-        };
-    
+  const [sabor, setsabor] = useState('');
+  const [descricao, setdescricao] = useState('');
+  const [imagemFile, setimagemFile] = useState(null);
+  const [preco, setpreco] = useState('');
+  const [categoria, setcategoria] = useState('');
+
+  const location = useLocation();
+ 
+  const { produtoData, isEditing: editingFromLocation } = location.state || {};
+
+  useEffect(() => {
+    if (editingFromLocation && produtoData) {
+      setIsEditing(true);
+      setsabor(produtoData.sabor || "");
+      setdescricao(produtoData.descricao || "");
+      setimagemFile(produtoData.imagem || "");
+      setpreco(produtoData.preco || "");
+      setcategoria(produtoData.categoria || "");
+      // Preencha os demais campos conforme necessário
+    }
+  }, [editingFromLocation, produtoData]);
+
+  const handlesaborChange = (e) => setsabor(e.target.value);
+  const handledescricaoChange = (e) => setdescricao(e.target.value);
+  const handleimagemFileChange = (e) => setimagemFile(e.target.files[0]);
+  const handleprecoChange = (e) => setpreco(e.target.value);
+  const handleCategoriaChange = (e) => setcategoria(e.target.value);
+
+  const handleCadastro = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('sabor', sabor);
+      formData.append('descricao', descricao);
+      formData.append('imagem', imagemFile);
+      formData.append('preco', preco);
+      formData.append('categoria', categoria);
+
+      const response = await axios.post('http://localhost/api/cadastrarPizza', formData);
+
+      console.log(response.data);
+      alert('Produto cadastrado com sucesso!');
+      window.location.href = '/Cardapio'; // Redireciona para o Cardápio após cadastrar/editar
+    } catch (error) {
+      console.error('Erro ao cadastrar produto:', error.response || error);
+      alert('Erro ao cadastrar produto');
+    }
+  };
+
+  const handleCadastrar = async (e) => {
+    e.preventDefault();
+
+    if (!sabor || !descricao || !imagemFile || !preco || !categoria) {
+      alert("Preencha todos os campos obrigatórios");
+    } else {
+      if (isEditing) {
+        await handleEditarProduto(productIdToEdit);
+      } else {
+        await handleCadastro();
+      }
+    }
+  };
         return (
             <div>
        <Navbar expand="lg" className="bg-body-primary-fixed-top" style={{
