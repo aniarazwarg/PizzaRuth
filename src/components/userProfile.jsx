@@ -10,6 +10,15 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
   const [carrinho, setCarrinho] = useState([]);
   const [userId, setUserId] = useState(null);
 
+//   const getTotalPrice = () => {
+//     if (Array.isArray(cart) && cart.length > 0) {
+//       const totalPrice = cart.reduce((total, item) => total + Number(item.preco), 0);
+//       return typeof totalPrice === "number" ? totalPrice.toFixed(2) : "0.00";
+//     } else {
+//       return "0.00";
+//     }
+//  };
+
   // Movida a declaração da função getUserId para o início do componente
   const getUserId = () => {
     const cdCliente = localStorage.getItem("cd_cliente");
@@ -133,12 +142,14 @@ const UserProfile = ({ user, showCart, onLogout, onSendOrder }) => {
                     <Card.Text style={{ textAlign: 'center' }}>{item.sabor}</Card.Text>
                     <Card.Text style={{ textAlign: 'center' }}>R${item.preco}</Card.Text>
                   </li>
+
+                  
                 ))}
               </ul>
 
-              <Card.Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.2vw', marginTop: 10 }}>
-          Total: R${carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2)}
-        </Card.Text>
+              {/* <Card.Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.2vw', marginTop: 10 }}>
+              Total: R${carrinho.reduce((total, item) => total + item.preco, 0).toFixed(2)}
+        </Card.Text> */}
 
               <Button
                 style={{ width: "50%", borderRadius: 40, display: 'flex', justifyContent: 'center' }}

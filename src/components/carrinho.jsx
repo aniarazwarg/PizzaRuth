@@ -64,12 +64,11 @@ const handleBuyClick = async () => {
       const responseData = await response.json();
       console.log('Dados do Pedido:', responseData);
     
-      // Trate a resposta do backend conforme necessário
-      // ...
+      
     
     } catch (error) {
-      console.error('Erro ao enviar pedido:', error);
-      alert('Erro ao enviar pedido. Por favor, tente novamente.');
+      // console.error('Erro ao enviar pedido:', error);
+      // alert('Erro ao enviar pedido. Por favor, tente novamente.');
     }
   } else {
     alert('Seu carrinho está vazio. Adicione itens antes de comprar.');
@@ -79,7 +78,7 @@ const handleBuyClick = async () => {
  const handleClearCart = () => {
     // Limpa o carrinho no localStorage e no estado local
     localStorage.removeItem('carrinho');
-    removeFromCart(null, true); // Ajuste a função removeFromCart conforme necessário
+    
  };
 
  return (
