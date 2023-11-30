@@ -11,15 +11,56 @@ function Cart({ cart, removeFromCart, sendOrder }) {
     }
  };
 
- const handleBuyClick = () => {
-    if (cart.length > 0) {
-      // Armazena o carrinho no localStorage antes de enviar o pedido
-      localStorage.setItem('carrinho', JSON.stringify(cart));
-      sendOrder(); // Chama a função sendOrder do Cardapio para enviar o pedido
-    } else {
-      alert("Seu carrinho está vazio. Adicione itens antes de comprar.");
+ const getCustomerData = () => {
+  // Obtém os dados do usuário do localStorage
+  const userData = localStorage.getItem('user');
+
+  // Verifica se há dados no localStorage
+  if (userData) {
+    // Converte os dados para um objeto JavaScript
+    const userObject = JSON.parse(userData);
+
+    // Retorna os dados do usuário
+    return userObject;
+  }
+
+  // Retorna um objeto vazio se não houver dados no localStorage
+  return {};
+};
+
+const handleBuyClick = async () => {
+  if (cart.length > 0) {
+    const totalPrice = getTotalPrice();
+    const paymentMethod = document.getElementById('formPaymentMethod').value;
+
+    // Obtenha os dados do cliente do localStorage
+    const customerData = getCustomerData();
+
+    try {
+      const response = await fetch('http://localhost/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cart,
+          totalPrice,
+          paymentMethod,
+          customerData,
+        }),
+      });
+
+      const responseData = await response.json();
+
+      // Trate a resposta do backend conforme necessário
+      console.log(responseData);
+    } catch (error) {
+      console.error('Erro ao enviar pedido:', error);
     }
- };
+  } else {
+    alert('Seu carrinho está vazio. Adicione itens antes de comprar.');
+  }
+};
 
  const handleClearCart = () => {
     // Limpa o carrinho no localStorage e no estado local
