@@ -38,12 +38,18 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 $app->get('/produtos', 'getProdutos');
 $app->get('/produto/{id}', 'getProduto');
+
+
 $app->get('/pizza', 'getPizza');
+$app->get('/pizza/{id}', 'getPizzas');
+
+
+
 $app->get('/usuario', 'getUsuario');
 $app->post('/inserir', 'getInserir');
 $app->post('/cadastrarPizza', 'getcadastrarPizza');
-$app->post('/editarPizza', 'editarPizza');
-$app->get('/editarPizza', 'editarPizza');
+$app->put('/editarPizza', 'editarPizza');
+// $app->get('/editarPizza', 'editarPizza');
 $app->post('/cadastrar', 'getCadastrar');
 $app->get('/entradinhas', 'getEntradinhas');
 $app->get('/sobremesas', 'getSobremesas');
@@ -258,7 +264,7 @@ function getcadastrarPizza(Request $request, Response $response, array $args)
             return $response->withJson(['error' => 'Erro no upload de imagem'], 500);
         }
 
-        $uploadPath = 'C:\Users\SANTOSTEC\OneDrive - Santos Tec\Área de Trabalho\nia\pIZZArUTH\src\assets';
+        $uploadPath = 'C:\Users\Aluno\Documents\GitHub\PizzaRuth\src\assets';
 
         // Verifique se o diretório de upload existe, se não, crie-o
         if (!is_dir($uploadPath)) {
@@ -315,9 +321,9 @@ function editarPizza(Request $request, Response $response, array $args)
 
         $db = getConn();
         $data = $request->getParsedBody();
-        $productId = $args['id']; // Assumindo que você está passando o ID do produto na rota
+        $productId = $args['id']; 
 
-        // Use a instrução SQL UPDATE para editar o produto existente
+        //editar o produto existente
         $stmt = $db->prepare('UPDATE pizzas SET sabor = :sabor, descricao = :descricao, imagem = :imagem, preco = :preco, categoria = :categoria WHERE id = :id');
         $stmt->bindParam(':id', $productId);
         $stmt->bindParam(':sabor', $data['sabor']);
@@ -342,6 +348,20 @@ function getPizza(Request $request, Response $response, array $args)
     $sql = "SELECT * FROM pizzas";
     $stmt = getConn()->query($sql);
     $pizzas = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $response->getBody()->write(json_encode($pizzas));
+    return $response;
+}
+
+function getPizzas(Request $request, Response $response, array $args)
+{
+    $id = $args['id'];
+    $conn = getConn();
+    $sql = "SELECT * FROM pizzas WHERE id=:id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam("id", $id);
+    $stmt->execute();
+    $pizzas = $stmt->fetchObject();
+
     $response->getBody()->write(json_encode($pizzas));
     return $response;
 }

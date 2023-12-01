@@ -189,8 +189,8 @@ function Cardapio() {
   <>
     <Button
       id="carrinho"
-      style={{ fontWeight: "bold", padding: 15, borderRadius: 40 }}
-      variant="outline-dark"
+      style={{ color: 'white', backgroundColor:'white' , borderColor:'white'}}
+      
     >
       Carrinho
     </Button>
